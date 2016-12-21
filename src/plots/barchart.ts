@@ -37,7 +37,7 @@ export class BarChart {
         rect.merge(rect_enter)
             .attr('height', this.bar_height)
             .attr('width', d => d * expand)
-            .attr('y', (d, i) => i * (this.bar_height + padding))
+            .attr('y', (d, i) => i * (this.bar_height + padding));
 
         rect.exit().remove();
     }
