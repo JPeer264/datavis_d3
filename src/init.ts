@@ -7,6 +7,3 @@ import { PieChart } from './plots/piechart';
 
 const barchart = new BarChart('.barchart');
 const piechart = new PieChart('.piechart');
-
-// @todo embed css/style.css
-// @todo embed vendor/css/foundation.min.css
