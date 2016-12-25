@@ -58,10 +58,10 @@ export class BarChart {
             .data(dataArray)
             .enter().append('rect')
             .attr('class', 'bar')
-            .attr('x', function(d) { return x(d.x); })
+            .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
-            .attr('y', function(d) { return y(d.y); })
-            .attr('height', function(d) { return height - y(d.y); });
+            .attr('y', d => y(d.y) )
+            .attr('height', d => height - y(d.y) );
 
         // add the x Axis
         this.svg.append('g')
