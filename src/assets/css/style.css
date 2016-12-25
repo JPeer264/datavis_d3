@@ -7,6 +7,10 @@
     overflow: hidden;
 }
 
+.svg-container--barchart {
+    padding-bottom: 60%;
+}
+
 .svg-content-responsive {
     display: inline-block;
     position: absolute;

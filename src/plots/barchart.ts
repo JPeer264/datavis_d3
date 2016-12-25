@@ -9,15 +9,21 @@ export class BarChart {
     public _height:number = 500 - this.margin.top  - this.margin.bottom;
 
     constructor(public selector: string = 'body') {
-        this.svg = d3.select(this.selector).append('svg')
-            .attr('width', this._width + this.margin.left + this.margin.right)
-            .attr('height', this._height + this.margin.top + this.margin.bottom)
+        this.svg = d3.select(this.selector)
+          .append('div')
+            .classed('svg-container', true)
+            .classed('svg-container--barchart', true)
+          .append('svg')
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('viewBox', '0 0 1000 800')
+            .classed('svg-content-responsive', true)
           .append('g')
             .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
             .padding(0.1);
+
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
     }
@@ -46,7 +52,7 @@ export class BarChart {
             dataArray.push({
                 x: d,
                 y: d3.mean(newData[d])
-            })
+            });
         }
 
         // Scale the range of the data in the domains
