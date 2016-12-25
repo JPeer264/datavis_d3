@@ -3,9 +3,9 @@ import d3 = require('d3');
 export class PieChart {
 
     constructor(public selector: string = 'body', public width: number = 360, public height: number = 360) {
-        const data =    [{"label":"one", "value":20},
-                        {"label":"two", "value":50},
-                        {"label":"three", "value":30}];
+        const data =    [{'label':'one', 'value':20},
+                        {'label':'two', 'value':50},
+                        {'label':'three', 'value':30}];
 
         this.update(data);
     }
@@ -26,11 +26,11 @@ export class PieChart {
         // responsive svg http://stackoverflow.com/a/25978286
         var svg = d3.select(this.selector)
             .append('div')
-            .classed("svg-container", true)
+            .classed('svg-container', true)
             .append('svg')
-            .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "-100 -100 600 600")
-            .classed("svg-content-responsive", true)
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('viewBox', '-100 -100 600 600')
+            .classed('svg-content-responsive', true)
             .append('g')
             .attr('transform', 'translate(' + (this.width / 2) +
                 ',' + (this.height / 2) + ')');
