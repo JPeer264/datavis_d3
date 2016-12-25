@@ -23,10 +23,14 @@ export class PieChart {
 
         var color = d3.scaleOrdinal(d3.schemeCategory20b);
 
-        var svg = d3.select('.piechart')
+        // responsive svg http://stackoverflow.com/a/25978286
+        var svg = d3.select(this.selector)
+            .append('div')
+            .classed("svg-container", true)
             .append('svg')
-            .attr('width', this.width)
-            .attr('height', this.height)
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "-100 -100 600 600")
+            .classed("svg-content-responsive", true)
             .append('g')
             .attr('transform', 'translate(' + (this.width / 2) +
                 ',' + (this.height / 2) + ')');
