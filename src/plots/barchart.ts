@@ -1,44 +1,69 @@
 import d3 = require('d3');
 
 export class BarChart {
-    public _width:number;
-    public _height:number;
+    // set the dimensions and margins of the graph
 
-    constructor(public selector: string = 'body', public max_width: number = 200, public max_height: number = 200, public bar_height: number = 50) {
-        const data = [4, 200, 15, 23, 42];
+    // set the ranges
 
-        this.update(data);
-    }
+    constructor(public selector: string = 'body', public bar_height: number = 50) {}
 
-    public set width(width:number) {
-        this._width = width;
-    }
+    public update(barinfo): void {
+        let margin = {top: 20, right: 20, bottom: 30, left: 40};
+        let _width:number = 960 - margin.left - margin.right;
+        let _height:number = 500 - margin.top - margin.bottom;
+        let x = d3.scaleBand()
+            .range([0, _width])
+            .padding(0.1);
+        let y = d3.scaleLinear()
+            .range([_height, 0]);
+        let svg = d3.select(this.selector).append("svg")
+            .attr("width", _width + margin.left + margin.right)
+            .attr("height", _height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    public get width():number {
-        return this._width;
-    }
+        const data = barinfo.data;
+        const newData = {};
+        const dataArray = [];
 
-    public update(data: Array<number>): void {
-        const padding = 5;
-        const expand = this.max_width / d3.max(data);
+        for (let d of data) {
+            try {
+                newData[d.x].push(d.y);
+            } catch (e) {
+                newData[d.x] = [ d.y ];
+            }
+        }
 
-        this._width = d3.max(data) * expand;
-        this._height = data.length * (padding + this.bar_height);
+        for (let d in newData) {
+            dataArray.push({
+                x: d,
+                y: d3.mean(newData[d])
+            })
+        }
 
-        let svg = d3.select(this.selector)
-                    .append('svg')
-                    .attr('width', this._width)
-                    .attr('height', this._height);
+        // Scale the range of the data in the domains
+        x.domain([1, 2, 3, 4, 5]);
+        y.domain([0, d3.max(data, d => d.y)]);
 
-        const g = svg.append('g');
-        const rect = g.selectAll('rect').data(data);
-        const rect_enter = rect.enter().append('rect').attr('x', 0);
+        // append the rectangles for the bar chart
+        svg.selectAll(".bar")
+            .data(dataArray)
+          .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.x); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { console.log(d); return y(d.y); })
+            .attr("height", function(d) { console.log(y(d.y)); return _height - y(d.y); });
 
-        rect.merge(rect_enter)
-            .attr('height', this.bar_height)
-            .attr('width', d => d * expand)
-            .attr('y', (d, i) => i * (this.bar_height + padding));
+        // add the x Axis
+        svg.append("g")
+            .attr("transform", "translate(0," + _height + ")")
+            .call(d3.axisBottom(x));
 
-        rect.exit().remove();
+        // add the y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        // rect.exit().remove();
     }
 }
