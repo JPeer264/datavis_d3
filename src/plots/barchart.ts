@@ -4,6 +4,7 @@ export class BarChart {
     public x;
     public y;
     public svg;
+    public tooltip;
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
     public _width:number  = 960 - this.margin.left - this.margin.right;
     public _height:number = 500 - this.margin.top  - this.margin.bottom;
@@ -26,9 +27,13 @@ export class BarChart {
 
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
+
     }
 
     public update(barinfo): void {
+        let tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
         let x = this.x;
         let y = this.y;
         let width = this._width;
@@ -59,15 +64,40 @@ export class BarChart {
         x.domain([1, 2, 3, 4, 5]);
         y.domain([0, d3.max(data, d => d.y)]);
 
+        this.svg.exit()
+            .attr('class', 'exit')
+            .remove();
+
+        this.svg.attr('class', 'update')
+            .attr('x', d => 0 )
+            .attr('y', d => 0 )
+            .attr('width', 0)
+            .attr('height', 0)
+
         // append the rectangles for the bar chart
         this.svg.selectAll('.bar')
             .data(dataArray)
             .enter().append('rect')
-            .attr('class', 'bar')
+            .attr('class', 'enter')
             .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
             .attr('y', d => y(d.y) )
-            .attr('height', d => height - y(d.y) );
+            .attr('height', d => height - y(d.y) )
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html('test ')
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+
+                console.log(d3.event)
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
 
         // add the x Axis
         this.svg.append('g')
