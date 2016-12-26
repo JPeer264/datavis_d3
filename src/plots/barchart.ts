@@ -9,7 +9,7 @@ export class BarChart {
     public _width:number  = 960 - this.margin.left - this.margin.right;
     public _height:number = 500 - this.margin.top  - this.margin.bottom;
 
-    constructor(public selector: string = 'body') {
+    constructor(public selector: string = 'body', public className: string = 'chart') {
         this.svg = d3.select(this.selector)
           .append('div')
             .classed('svg-container', true)
@@ -64,25 +64,29 @@ export class BarChart {
         x.domain([1, 2, 3, 4, 5]);
         y.domain([0, d3.max(data, d => d.y)]);
 
-        this.svg.exit()
+        // @todo rects are drawn multiple times
+        // https://bl.ocks.org/mbostock/3808234
+        let test = this.svg.selectAll(this.className)
+            .data(dataArray);
+
+        test.exit()
             .attr('class', 'exit')
             .remove();
 
-        this.svg.attr('class', 'update')
+        test.attr('class', 'update')
             .attr('x', d => 0 )
             .attr('y', d => 0 )
             .attr('width', 0)
             .attr('height', 0)
 
         // append the rectangles for the bar chart
-        this.svg.selectAll('.bar')
-            .data(dataArray)
-            .enter().append('rect')
+        test.enter().append('rect')
             .attr('class', 'enter')
             .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
             .attr('y', d => y(d.y) )
-            .attr('height', d => height - y(d.y) )
+            .attr('height', d => height - y(d.y))
+            // initialize event listeners
             .on("mouseover", function(d) {
                 tooltip.transition()
                     .duration(200)
@@ -100,14 +104,14 @@ export class BarChart {
             })
 
         // add the x Axis
-        this.svg.append('g')
+        test.append('g')
             .attr('transform', 'translate(0,' + height + ')')
             .call(d3.axisBottom(x));
 
         // add the y Axis
-        this.svg.append('g')
+        test.append('g')
             .call(d3.axisLeft(y));
 
-        return this.svg;
+        return test;
     }
 }
