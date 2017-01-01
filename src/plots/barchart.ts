@@ -64,22 +64,26 @@ export class BarChart {
         x.domain([1, 2, 3, 4, 5]);
         y.domain([0, d3.max(data, d => d.y)]);
 
-        // @todo rects are drawn multiple times
         // https://bl.ocks.org/mbostock/3808234
-        let test = this.svg.selectAll(this.className)
+        let test = this.svg.selectAll('rect')
             .data(dataArray);
 
+        console.log(dataArray)
+
+        // EXIT old elements not present in new data.
         test.exit()
             .attr('class', 'exit')
             .remove();
 
+        // UPDATE old elements present in new data.
         test.attr('class', 'update')
-            .attr('x', d => 0 )
-            .attr('y', d => 0 )
-            .attr('width', 0)
-            .attr('height', 0)
+            .attr('x', d => x(d.x) )
+            .attr('width', x.bandwidth())
+            .transition(300)
+            .attr('y', d => y(d.y) )
+            .attr('height', d => height - y(d.y))
 
-        // append the rectangles for the bar chart
+        // // append the rectangles for the bar chart
         test.enter().append('rect')
             .attr('class', 'enter')
             .attr('x', d => x(d.x) )
@@ -103,14 +107,14 @@ export class BarChart {
                     .style("opacity", 0);
             })
 
-        // add the x Axis
-        test.append('g')
-            .attr('transform', 'translate(0,' + height + ')')
-            .call(d3.axisBottom(x));
+        // // add the x Axis
+        // test.append('g')
+        //     .attr('transform', 'translate(0,' + height + ')')
+        //     .call(d3.axisBottom(x));
 
-        // add the y Axis
-        test.append('g')
-            .call(d3.axisLeft(y));
+        // // add the y Axis
+        // test.append('g')
+        //     .call(d3.axisLeft(y));
 
         return test;
     }
