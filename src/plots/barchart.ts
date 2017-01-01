@@ -30,18 +30,9 @@ export class BarChart {
 
     }
 
-    public update(barinfo): void {
-        let tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-        let x = this.x;
-        let y = this.y;
-        let width = this._width;
-        let height = this._height;
-
-        const data = barinfo.data;
+    public prepareData(data): Array<Object> {
         const newData = {};
-        const dataArray = [];
+        const result  = [];
 
         // sort them by x coordinate
         for (let d of data) {
@@ -54,68 +45,80 @@ export class BarChart {
 
         // calculate the mean for every x coordinate and save into new array
         for (let d in newData) {
-            dataArray.push({
+            result.push({
                 x: d,
                 y: d3.mean(newData[d])
             });
         }
+
+        return result;
+    }
+
+    public update(barinfo): void {
+        let tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
+        let x = this.x;
+        let y = this.y;
+        let width = this._width;
+        let height = this._height;
+
+        const data = barinfo.data;
+        const dataArray = this.prepareData(data);
 
         // Scale the range of the data in the domains
         x.domain([1, 2, 3, 4, 5]);
         y.domain([0, d3.max(data, d => d.y)]);
 
         // https://bl.ocks.org/mbostock/3808234
-        let test = this.svg.selectAll('rect')
+        let barchart = this.svg.selectAll('rect')
             .data(dataArray);
 
-        console.log(dataArray)
-
         // EXIT old elements not present in new data.
-        test.exit()
+        barchart.exit()
             .attr('class', 'exit')
             .remove();
 
         // UPDATE old elements present in new data.
-        test.attr('class', 'update')
+        barchart.attr('class', 'update')
             .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
             .transition(300)
             .attr('y', d => y(d.y) )
             .attr('height', d => height - y(d.y))
 
-        // // append the rectangles for the bar chart
-        test.enter().append('rect')
+        // append the rectangles for the bar chart
+        barchart.enter().append('rect')
             .attr('class', 'enter')
             .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
             .attr('y', d => y(d.y) )
             .attr('height', d => height - y(d.y))
             // initialize event listeners
-            .on("mouseover", function(d) {
+            .on('mouseover', function(d) {
                 tooltip.transition()
                     .duration(200)
-                    .style("opacity", .9);
+                    .style('opacity', .9);
                 tooltip.html('test ')
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+                    .style('left', (d3.event.pageX) + 'px')
+                    .style('top', (d3.event.pageY - 28) + 'px');
 
-                console.log(d3.event)
             })
-            .on("mouseout", function(d) {
+            .on('mouseout', function(d) {
                 tooltip.transition()
                     .duration(500)
-                    .style("opacity", 0);
+                    .style('opacity', 0);
             })
 
         // // add the x Axis
-        // test.append('g')
+        // barchart.append('g')
         //     .attr('transform', 'translate(0,' + height + ')')
         //     .call(d3.axisBottom(x));
 
         // // add the y Axis
-        // test.append('g')
+        // barchart.append('g')
         //     .call(d3.axisLeft(y));
 
-        return test;
+        return barchart;
     }
 }
