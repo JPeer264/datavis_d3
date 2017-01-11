@@ -29,17 +29,27 @@ body {
     // background: url('../assets/img/bg.svg');
 }
 
-h1 {
+h1, h2, h3, h4 {
     text-align: center;
-    margin: 1.2em 0;
     font-family: 'Cabin', sans-serif;
+}
+
+h1 {
     font-weight: 600;
     font-style: italic;
     font-size: 3em;
 }
 
+h3 {
+    font-size: 1.5em;
+}
+
 .board--choices{
     margin: 0 4em;
+}
+
+.board--choices h1 {
+    margin: 1.2em 0;
 }
 
 .choice--wrapper {

@@ -6,8 +6,8 @@ export class BarChart {
     public svg;
     public tooltip;
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
-    public _width:number  = 960 - this.margin.left - this.margin.right;
-    public _height:number = 500 - this.margin.top  - this.margin.bottom;
+    public _width:number  = 960; // - this.margin.left - this.margin.right;
+    public _height:number = 500; //- this.margin.top  - this.margin.bottom;
 
     constructor(public selector: string = 'body', public className: string = 'chart') {
         this.svg = d3.select(this.selector)
@@ -19,7 +19,7 @@ export class BarChart {
             .attr('viewBox', '0 0 1000 800')
             .classed('svg-content-responsive', true)
           .append('g')
-            .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+            // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
