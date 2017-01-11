@@ -5,10 +5,47 @@
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link href="vendor/css/foundation.css" rel="stylesheet" type="text/css">
         <link href="assets/css/style.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Cabin:400,600,600i|Open+Sans" rel="stylesheet">
     </head>
     <body>
-        <div class="row align-center">
-            <p>Plots by d3 will be generated here.</p>
+        <div class="board--choices">
+            <h1>What' ya wanna know, dude?</h1>
+
+            <div class="choices row">
+
+                <div class="choice--wrapper column small-12 medium-4">
+                    <div class="choice choice--default"></div>
+                    <p>Alcohol & Sex</p>
+                </div>
+
+                <div class="choice--wrapper column small-12 medium-4">
+                    <div class="choice choice--default"></div>
+                    <p>Going out & Parents</p>
+                </div>
+
+                <div class="choice--wrapper column small-12 medium-4">
+                    <div class="choice choice--custom">
+                        <form>
+                            <select>
+                                <option disabled selected>Choose here</option>
+                                <option value="option-1">Option 1</option>
+                                <option value="option-2">Option 2</option>
+                            </select>
+                            <select>
+                                <option disabled selected>Choose here</option>
+                                <option value="option-1">Option 1</option>
+                                <option value="option-2">Option 2</option>
+                            </select>
+                        </form>
+                    </div>
+                    <p class="disabled">Compare custom</p>
+                </div>
+
+            </div>
+
+        </div>
+
+<!--        <div class="row align-center">
             <div class="column">
                 <span class="barchart"></span>
             </div>
@@ -23,6 +60,6 @@
             <div class="column small-12 medium-4">
                 <div class="piechart3"></div>
             </div>
-        </div>
+        </div>-->
     </body>
 </html>
