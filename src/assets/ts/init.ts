@@ -14,9 +14,48 @@ const getData = new Data('assets/data/students.csv');
 
 
 getData.start((err, data) => {
-    const piechart = new PieChart(data.data, 'sex', '.piechart');
-    const piechart2 = new PieChart(data.data, 'sex', '.piechart2');
-    const piechart3 = new PieChart(data.data, 'sex', '.piechart3');
+    const piechart = new PieChart(data.data, {
+        dataKey: 'sex',
+        selector: '.piechart',
+        keys: {
+            'F': {
+                color: '#FF0000',
+                name: 'Female'
+            },
+            'M': {
+                color: '#0000FF',
+                name: 'Male'
+            }
+        }
+    });
+    const piechart2 = new PieChart(data.data, {
+        dataKey: 'romantic',
+        selector: '.piechart2',
+        keys: {
+            'no': {
+                color: '#000FFF',
+                name: 'No'
+            },
+            'yes': {
+                color: '#FFF000',
+                name: 'Yes'
+            }
+        }
+    });
+    const piechart3 = new PieChart(data.data, {
+        dataKey: 'famsize',
+        selector: '.piechart3',
+        keys: {
+            'GT3': {
+                color: '#000',
+                name: 'Greater than 3'
+            },
+            'LE3': {
+                color: '#e9e9e9',
+                name: 'Lower than 3'
+            }
+        }
+    });
 
     getData.addPieChart(piechart, piechart2, piechart3);
 
@@ -35,12 +74,7 @@ $(function(){
 
             for (let optionsKey in result){
                 for (let key in result[optionsKey]){
-                    $('#selection-'+counter).append(
-                        "<option value=\"" +
-                        key +
-                        "\">" +
-                        result[optionsKey][key] +
-                        "</option>");
+                    $('#selection-'+counter).append(`<option value="${key}">${result[optionsKey][key]}</option>`);
                 }
                 counter += 1;
             }

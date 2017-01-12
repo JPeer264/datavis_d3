@@ -1,59 +1,91 @@
 import d3 = require('d3');
 
 export class PieChart {
-    constructor(public data: Object, public dataKey: String, public selector: string = 'body', public width: number = 360, public height: number = 360) {
+    constructor(public data: Object, private options) {
+        options = options || {};
+        options.dataKey = options.dataKey || 'sex';
+        options.keys = options.keys || {}
+        options.selector = options.selector || 'body';
+        options.width = 360;
+        options.height = 360;
     }
 
     public update(): void {
-        // const data = [
-        //     { label: 'Abulia', count: 10 },
-        //     { label: 'Betelgeuse', count: 20 },
-        //     { label: 'Cantaloupe', count: 30 },
-        //     { label: 'Dijkstra', count: 10 }
-        // ];
+        const globalData = this.data;
+        const dataKey = this.options.dataKey;
 
-        const data = this.data;
-        const dataKey = this.dataKey;
+        const tempData = {};
+        const pieData = [];
+        const colorArray = [];
 
-        const newData = {};
-
-        for (let item in data) {
-            console.log(data[item]);
+        // split values from dattaKey
+        for (let item in globalData) {
+            if (!tempData[globalData[item][dataKey]]) {
+                tempData[globalData[item][dataKey]] = 1;
+            } else {
+                tempData[globalData[item][dataKey]] += 1;
+            }
         }
 
-        // var radius = Math.min(this.width, this.height) / 2;
+        for (let label in tempData) {
+            const count = tempData[label];
+            const keys = this.options.keys[label];
 
-        // var color = d3.scaleOrdinal(d3.schemeCategory20b);
+            if (!!keys) {
+                colorArray.push(keys.color);
+            } else {
+                colorArray.push("#"+((1<<24)*Math.random()|0).toString(16));
+            }
 
-        // // responsive svg http://stackoverflow.com/a/25978286
-        // var svg = d3.select(this.selector)
-        //     .append('div')
-        //     .classed('svg-container', true)
-        //     .append('svg')
-        //     .attr('preserveAspectRatio', 'xMinYMin meet')
-        //     .attr('viewBox', '-100 -100 600 600')
-        //     .classed('svg-content-responsive', true)
-        //     .append('g')
-        //     .attr('transform', 'translate(' + (this.width / 2) +
-        //         ',' + (this.height / 2) + ')');
+            if (label === 'undefined') {
+                continue;
+            }
 
-        // var arc = d3.arc()
-        //     .innerRadius(0)
-        //     .outerRadius(radius);
+            const max = 200;
+            const min = 10;
 
-        // var pie = d3.pie()
-        //     .value(function(d) { return d.count; })
-        //     .sort(null);
+            pieData.push({
+                label,
+                count: Math.random() * (max - min) + min
+            });
 
-        // var path = svg.selectAll('path')
-        //     .data(pie(data))
-        //     .enter()
-        //     .append('path')
-        //     .attr('d', arc)
-        //     .attr('fill', function(d) {
-        //         return color(d.data.label);
-        //     });
+            console.log(pieData)
+        }
 
-        // path.exit().remove();
+        const radius = Math.min(this.options.width, this.options.height) / 2;
+
+        const color = d3.scaleOrdinal(d3.schemeCategory20b)
+            .range(colorArray);
+
+        // responsive svg http://stackoverflow.com/a/25978286
+        const svg = d3.select(this.options.selector)
+            .append('div')
+            .classed('svg-container', true)
+            .append('svg')
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('viewBox', '-100 -100 600 600')
+            .classed('svg-content-responsive', true)
+            .append('g')
+            .attr('transform', 'translate(' + (this.options.width / 2) +
+                ',' + (this.options.height / 2) + ')');
+
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(radius);
+
+        const pie = d3.pie()
+            .value(function(d) { return d.count; })
+            .sort(null);
+
+        const path = svg.selectAll('path')
+            .data(pie(pieData))
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', function(d) {
+                return color(d.data.label);
+            });
+
+        path.exit().remove();
     }
 }
