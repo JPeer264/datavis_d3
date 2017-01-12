@@ -5,25 +5,24 @@ import '../../vendor/js/foundation.js';
 
 import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
+import { Data } from './Data';
 
 const barchart = new BarChart('.barchart');
-const piechart = new PieChart('.piechart');
-const piechart2 = new PieChart('.piechart2');
-const piechart3 = new PieChart('.piechart3');
 
-d3.csv('assets/data/students.csv', (err, data) => {
-    let barinfo = {
-        data: []
-    };
 
-    for (let person of data) {
-        barinfo.data.push({
-            x: person.famrel,
-            y: person.goout
-        });
-   }
+const getData = new Data('assets/data/students.csv');
 
-   barchart.update(barinfo);
+
+getData.start((err, data) => {
+    const piechart = new PieChart(data.data, 'sex', '.piechart');
+    const piechart2 = new PieChart(data.data, 'sex', '.piechart2');
+    const piechart3 = new PieChart(data.data, 'sex', '.piechart3');
+
+    getData.addPieChart(piechart, piechart2, piechart3);
+
+    barchart.update(data.barinfo);
+
+    getData.updateCharts();
 });
 
 $(function(){

@@ -1,4 +1,5 @@
 import d3 = require('d3');
+import $ = require('jquery');
 
 export class BarChart {
     public x;
@@ -65,6 +66,7 @@ export class BarChart {
 
         const data = barinfo.data;
         const dataArray = this.prepareData(data);
+        const isTooltip = false;
 
         // Scale the range of the data in the domains
         x.domain([1, 2, 3, 4, 5]);
@@ -90,25 +92,46 @@ export class BarChart {
         // append the rectangles for the bar chart
         barchart.enter().append('rect')
             .attr('class', 'enter')
+            .attr('class', 'interactive-rect')
+            .attr('id', (d, i) => {
+                return 'interactive-rect-' + i;
+            })
             .attr('x', d => x(d.x) )
             .attr('width', x.bandwidth())
             .attr('y', d => y(d.y) )
             .attr('height', d => height - y(d.y))
             // initialize event listeners
-            .on('mouseover', function(d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style('opacity', .9);
-                tooltip.html('test ')
-                    .style('left', (d3.event.pageX) + 'px')
-                    .style('top', (d3.event.pageY - 28) + 'px');
+            .on('mouseover', d => {
+                if (isTooltip) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style('opacity', .9);
+                    tooltip.html(d.y)
+                        .style('left', (d3.event.pageX) + 'px')
+                        .style('top', (d3.event.pageY - 28) + 'px');
+                }
+            })
+            .on('mouseout', d => {
+                if (isTooltip) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style('opacity', 0);
+                }
+            })
+            .on('click', (d, i) => {
+                if ($('#interactive-rect-' + i).hasClass('rect-active')) {
+                    $('.interactive-rect').removeClass('low-alpha rect-active');
 
-            })
-            .on('mouseout', function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style('opacity', 0);
-            })
+                    // @todo remove filter
+                    return;
+                }
+
+                $('.interactive-rect').removeClass('low-alpha rect-active');
+                $('.interactive-rect').addClass('low-alpha');
+                $('#interactive-rect-' + i).removeClass('low-alpha');
+                $('#interactive-rect-' + i).addClass('rect-active');
+                // @todo apply filter
+            });
 
         // // add the x Axis
         // barchart.append('g')

@@ -22,6 +22,7 @@
     position: absolute;
     background-color: white;
     padding: 1rem;
+    pointer-events: none;
 }
 
 body {
@@ -97,4 +98,8 @@ h3 {
 
 .enabled {
     cursor: pointer;
+}
+
+.low-alpha {
+    opacity: .5;
 }
