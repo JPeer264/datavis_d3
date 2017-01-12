@@ -72,7 +72,7 @@ $(function(){
 
     function init(){
 
-        /* Enables the button if there are both options selected */
+        /* Enables the custom choice if both options are selected */
         $('.choice--custom select').change(function(){
             let selectionNum = $('#selection-1').val();
             let selectionBin = $('#selection-2').val();
