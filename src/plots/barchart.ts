@@ -55,6 +55,10 @@ export class BarChart {
         return result;
     }
 
+    public addHeader(tag:string, headerText: string = 'HEADER'): void {
+        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.selector));
+    }
+
     public update(barinfo): void {
         let tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
@@ -144,4 +148,5 @@ export class BarChart {
 
         return barchart;
     }
+
 }

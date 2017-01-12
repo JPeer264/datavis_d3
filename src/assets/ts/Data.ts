@@ -8,7 +8,7 @@ export class Data {
     constructor(private csvFile: String) {
     }
 
-    start(cb: Function) {
+    render(cb: Function) {
         d3.csv(this.csvFile, (err, data) => {
             let barinfo = {
                 data: []

@@ -13,7 +13,7 @@ const barchart = new BarChart('.barchart');
 const getData = new Data('assets/data/students.csv');
 
 
-getData.start((err, data) => {
+getData.render((err, data) => {
     const piechart = new PieChart(data.data, {
         dataKey: 'sex',
         selector: '.piechart',
@@ -62,9 +62,6 @@ getData.start((err, data) => {
     barchart.update(data.barinfo);
 
     getData.updateCharts();
-});
-
-$(function(){
 
     /* Loads the options from the json file and inserts in the start page */
     function loadOptions(){
@@ -83,11 +80,12 @@ $(function(){
 
     function setChoices(){
         $('#choice-1').click(function(){
-            renderCharts("walc", "sex");
+            console.log("walc", "sex");
+            barchart.addHeader("h1", "blub");
         });
 
         $('#choice-2').click(function(){
-            renderCharts("goout", "pstatus");
+            console.log("goout", "pstatus");
         });
 
         $('#choice-3, .choice--custom').click(function(){
@@ -95,13 +93,10 @@ $(function(){
             let selectionBin = $('#selection-2').val();
 
             if (selectionNum && selectionBin){
-                renderCharts(selectionNum, selectionBin);
+                console.log(selectionNum, selectionBin);
+                barchart.addHeader("h1", selectionNum);
             }
         });
-    }
-
-    function renderCharts(choiceNum, choiceBin){
-        console.log("Should render the charts with: " + choiceNum + " & " + choiceBin);
     }
 
     function init(){
@@ -121,6 +116,4 @@ $(function(){
     init();
     loadOptions();
     setChoices();
-
-
 });
