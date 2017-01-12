@@ -25,3 +25,29 @@ d3.csv('assets/data/students.csv', (err, data) => {
 
    barchart.update(barinfo);
 });
+
+$(function(){
+
+    /* Loads the options from the json file and inserts in the start page */
+    function loadOptions(){
+        $.getJSON("assets/data/options.json", function(result){
+
+            let counter = 1;
+
+            for (let optionsKey in result){
+                for (let key in result[optionsKey]){
+                    $('.selection-'+counter).append(
+                        "<option value=\"" +
+                        key +
+                        "\">" +
+                        result[optionsKey][key] +
+                        "</option>");
+                }
+                counter += 1;
+            }
+        });
+    }
+
+    loadOptions();
+
+});

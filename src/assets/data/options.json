@@ -1,0 +1,31 @@
+{
+  "numeric": {
+    "age": "Students Age",
+    "Medu": "Mothers Education",
+    "Fedu": "Fathers Education",
+    "reason": "Reason for this School",
+    "traveltime": "Traveltime to School",
+    "studytime": "Weekly Studytime",
+    "famrel": "Family Relationship Quality",
+    "freetime": "Amount of Freetime",
+    "goout": "Going Out with Friends",
+    "dalc": "Workday Alcohol Consumption",
+    "walc": "Weekend Alcohol Consumption",
+    "health": "Health Status"
+  },
+  "binary": {
+    "school": "Student's School",
+    "sex": "Student's Sex",
+    "address": "Home Address",
+    "famsize": "Family Size",
+    "Pstatus": "Parents Cohabitation Status",
+    "guardian": "Student's Guardian",
+    "schoolsup": "Extra Educational Support",
+    "famsup": "Family Educational Support",
+    "activities": "Extra Curricular Activities",
+    "nursery": "Attendance at Nursery School",
+    "higher": "Wants to take Higher Education",
+    "internet": "Home Internet Access",
+    "romantic": "Romantic Relationship"
+  }
+}
