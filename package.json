@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run copy && webpack-dev-server --content-base dist/ --inline --open --port 2020",
-    "copy": "cp -r src/assets dist/assets",
+    "copy": "cp -r src/assets dist/assets && cp -r src/vendor dist/vendor",
     "watch": "npm run copy && watch -p 'src/**/*.css' -c 'npm run copy'"
   },
   "repository": {
