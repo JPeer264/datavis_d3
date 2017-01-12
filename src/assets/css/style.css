@@ -27,7 +27,8 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    // background: url('../assets/img/bg.svg');
+    background: url('../img/bg.svg') no-repeat center center fixed;
+    background-size: cover;
 }
 
 h1, h2, h3, h4 {
