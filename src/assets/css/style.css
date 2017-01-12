@@ -64,10 +64,6 @@ h3 {
     margin-bottom: .7em;
 }
 
-.choice + p {
-    cursor: pointer;
-}
-
 .choice--default {
     background: #ff7e43;
     cursor: pointer;
@@ -79,6 +75,10 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.choice + p {
+    cursor: pointer;
 }
 
 .choice--custom form {
@@ -93,4 +93,8 @@ h3 {
 .disabled {
     color: #ccc;
     cursor: not-allowed !important;
+}
+
+.enabled {
+    cursor: pointer;
 }
