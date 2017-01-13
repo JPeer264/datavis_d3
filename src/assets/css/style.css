@@ -104,3 +104,7 @@ h3 {
 .low-alpha {
     opacity: .5;
 }
+
+.hidden {
+    display: none;
+}
