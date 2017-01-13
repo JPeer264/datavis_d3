@@ -8,7 +8,7 @@ import { ChartManager } from './ChartManager';
 
 const manager = new ChartManager('assets/data/students.csv');
 
-function showCharts(selectionNum, selectionBin) {
+const showCharts = (selectionNum, selectionBin): void => {
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
@@ -69,70 +69,72 @@ function showCharts(selectionNum, selectionBin) {
 
         manager.updateCharts();
     });
-}
-
+};
 
 /* Loads the options from the json file and inserts it in the start page */
-function loadOptions(){
-    $.getJSON("assets/data/options.json", function(result){
+const loadOptions = (cb = function(result) {}): void => {
+    $.getJSON('assets/data/options.json', result => {
+        const typeObj: Object = {};
+
+        let counter: number = 1;
 
         /* Seperates the data in the different types */
-        const typeObj = {};
         for (let key in result){
             if (!typeObj[result[key].type]) {
                 typeObj[result[key].type] = {}
             }
+
             typeObj[result[key].type][key] = result[key].name
         }
 
         /* Inserts the different keys into the option fields */
-        let counter = 1;
         for (let optionsKey in typeObj){
             for (let key in typeObj[optionsKey]){
-                $('#selection-'+counter)
+                $(`#selection-${ counter }`)
                     .append(`<option value="${key}">${typeObj[optionsKey][key]}</option>`);
             }
+
             counter += 1;
         }
+
+        cb(result);
     });
-}
+};
 
 
 /* Adds functionality to the buttons so that the user can set his choices */
-function setChoices(){
-
+const setChoices = (): void => {
     /* Enables the button if both choices are selected */
     $('.choice--custom select').change(function(){
         let selectionNum = $('#selection-1').val();
         let selectionBin = $('#selection-2').val();
 
         if (selectionNum && selectionBin) {
-            $('.choice--custom + p').removeClass("disabled");
-            $('.choice--custom').addClass("enabled");
+            $('.choice--custom + p').removeClass('disabled');
+            $('.choice--custom').addClass('enabled');
         }
     });
 
     /* Predefined choice 1: alcohol consumption and sex */
     $('#choice-1').click(function(){
-        showCharts("walc", "sex");
+        showCharts('walc', 'sex');
     });
 
     /* Predefined choice 2: going out & parents cohabitation status */
     $('#choice-2').click(function(){
-        showCharts("goout", "pstatus");
+        showCharts('goout', 'pstatus');
     });
 
     /* Custom choice: Ability to have custom choices */
-    $('#choice-3, .choice--custom').click(function(){
+    $('#choice-3, .choice--custom').click(() => {
         let selectionNum = $('#selection-1').val();
         let selectionBin = $('#selection-2').val();
 
-        if (selectionNum && selectionBin){
+        if (selectionNum && selectionBin) {
             showCharts(selectionNum, selectionBin);
         }
     });
-}
-
+};
 
 loadOptions();
 setChoices();
