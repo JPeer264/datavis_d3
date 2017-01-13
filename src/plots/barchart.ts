@@ -10,8 +10,13 @@ export class BarChart {
     public _width:number  = 960; // - this.margin.left - this.margin.right;
     public _height:number = 500; //- this.margin.top  - this.margin.bottom;
 
-    constructor(public selector: string = 'body', public className: string = 'chart') {
-        this.svg = d3.select(this.selector)
+    // constructor(public selector: string = 'body', public className: string = 'chart') {
+    constructor(private options) {
+        options.selector = options.selector || 'body',
+        options.className = options.className || 'chart',
+        options.manager = options.manager || {}
+
+        this.svg = d3.select(options.selector)
           .append('div')
             .classed('svg-container', true)
             .classed('svg-container--barchart', true)
@@ -56,7 +61,7 @@ export class BarChart {
     }
 
     public addHeader(tag:string, headerText: string = 'HEADER'): void {
-        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.selector));
+        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
     }
 
     public update(barinfo): void {
@@ -71,6 +76,7 @@ export class BarChart {
         const data = barinfo.data;
         const dataArray = this.prepareData(data);
         const isTooltip = false;
+        const manager = this.options.manager;
 
         // Scale the range of the data in the domains
         x.domain([1, 2, 3, 4, 5]);
@@ -123,12 +129,24 @@ export class BarChart {
                 }
             })
             .on('click', (d, i) => {
+                console.log(d)
                 if ($('#interactive-rect-' + i).hasClass('rect-active')) {
                     $('.interactive-rect').removeClass('low-alpha rect-active');
 
                     // @todo remove filter
+                    manager.releaseFilter();
+                    manager.updateCharts();
                     return;
                 }
+
+                // @todo add instead of `sex` and `goout` data from manager.optionOne
+                // @todo add instrad of 'M' the current z from the stacked bar chart
+                manager.filterData({
+                    famsup: 'yes',
+                    goout: d.x
+                });
+
+                manager.updateCharts();
 
                 $('.interactive-rect').removeClass('low-alpha rect-active');
                 $('.interactive-rect').addClass('low-alpha');

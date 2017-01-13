@@ -23,8 +23,8 @@ export class PieChart {
                 ',' + (this.options.height / 2) + ')');
     }
 
-    public update(): void {
-        const globalData = this.data;
+    public update(newData): void {
+        const globalData = newData || this.data;
         const dataKey = this.options.dataKey;
 
         const tempData = {};

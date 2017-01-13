@@ -1,7 +1,8 @@
 import d3 = require('d3');
 
-export class Data {
-    public data: Object;
+export class ChartManager {
+    public data: Array<Object>;
+    public pieData: Array<Object>;
     public pieCharts: Array<any> = [];
     public barCharts: Array<any> = [];
 
@@ -22,6 +23,7 @@ export class Data {
            }
 
            this.data = data;
+           this.pieData = data;
 
            cb(err, {
                data,
@@ -33,7 +35,7 @@ export class Data {
     updateCharts() {
         // update piecharts
         for (let pieChart of this.pieCharts) {
-            pieChart.update(this.data);
+            pieChart.update(this.pieData);
         }
 
         // update piecharts
@@ -48,5 +50,29 @@ export class Data {
 
     addBarChart(...charts) {
         this.barCharts = this.barCharts.concat(charts)
+    }
+
+    filterData(filterObject) {
+        const newData = [];
+
+        for (let item of this.data) {
+            let acceptArray = [];
+
+            for (let filterOption in filterObject) {
+                if (item[filterOption] === filterObject[filterOption]) {
+                    acceptArray.push(true);
+                }
+            }
+
+            if (acceptArray.length === Object.keys(filterObject).length) {
+                newData.push(item);
+            }
+        }
+
+        this.pieData = newData;
+    }
+
+    releaseFilter() {
+        this.pieData = this.data;
     }
 }

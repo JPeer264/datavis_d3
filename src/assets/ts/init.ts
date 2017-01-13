@@ -4,25 +4,22 @@ import '../../vendor/js/foundation.js';
 
 import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
-import { Data } from './Data';
+import { ChartManager } from './ChartManager';
 
-const barchart = new BarChart('.barchart');
-
-const getData = new Data('assets/data/students.csv');
+const manager = new ChartManager('assets/data/students.csv');
 
 function showCharts(selectionNum, selectionBin) {
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
-        duration: 300,
+        duration: 0,
         done: () => $('.summary').fadeIn(300)
     });
 
-    barchart.addHeader("h1", selectionNum);
-
-
-
-    getData.render((err, data) => {
+    manager.render((err, data) => {
+        const barchart = new BarChart({
+            selector: '.barchart',
+            manager: manager});
         const piechart = new PieChart(data.data, {
             dataKey: 'sex',
             selector: '.piechart',
@@ -66,14 +63,15 @@ function showCharts(selectionNum, selectionBin) {
             }
         });
 
-        getData.addPieChart(piechart, piechart2, piechart3);
+        manager.addPieChart(piechart, piechart2, piechart3);
 
         barchart.update(data.barinfo);
 
-        getData.updateCharts();
-
-    })
+        manager.updateCharts();
+    });
 }
+
+showCharts("walc", "sex");
 
 
 /* Loads the options from the json file and inserts it in the start page */
