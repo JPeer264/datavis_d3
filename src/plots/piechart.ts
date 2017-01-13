@@ -1,6 +1,8 @@
 import d3 = require('d3');
 
 export class PieChart {
+    public svg;
+
     constructor(public data: Object, private options) {
         options = options || {};
         options.dataKey = options.dataKey || 'sex';
@@ -8,6 +10,17 @@ export class PieChart {
         options.selector = options.selector || 'body';
         options.width = 360;
         options.height = 360;
+
+        this.svg = d3.select(this.options.selector)
+            .append('div')
+            .classed('svg-container', true)
+            .append('svg')
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('viewBox', '-100 -100 600 600')
+            .classed('svg-content-responsive', true)
+            .append('g')
+            .attr('transform', 'translate(' + (this.options.width / 2) +
+                ',' + (this.options.height / 2) + ')');
     }
 
     public update(): void {
@@ -41,34 +54,26 @@ export class PieChart {
                 continue;
             }
 
-            const max = 200;
-            const min = 10;
-
             pieData.push({
                 label,
-                count: Math.random() * (max - min) + min
+                count
             });
-
-            console.log(pieData)
         }
 
         const radius = Math.min(this.options.width, this.options.height) / 2;
+
+        const arcTween = function (d, index) {
+            var i = d3.interpolate(this._current, d);
+
+            this._current = i(0);
+
+            return function(t) { return arc(i(t), index); };
+        }
 
         const color = d3.scaleOrdinal(d3.schemeCategory20b)
             .range(colorArray);
 
         // responsive svg http://stackoverflow.com/a/25978286
-        const svg = d3.select(this.options.selector)
-            .append('div')
-            .classed('svg-container', true)
-            .append('svg')
-            .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '-100 -100 600 600')
-            .classed('svg-content-responsive', true)
-            .append('g')
-            .attr('transform', 'translate(' + (this.options.width / 2) +
-                ',' + (this.options.height / 2) + ')');
-
         const arc = d3.arc()
             .innerRadius(0)
             .outerRadius(radius);
@@ -77,15 +82,27 @@ export class PieChart {
             .value(function(d) { return d.count; })
             .sort(null);
 
-        const path = svg.selectAll('path')
+        const path = this.svg.selectAll('path')
             .data(pie(pieData))
-            .enter()
+
+        path.enter()
             .append('path')
+            .attr('class', 'enter')
             .attr('d', arc)
             .attr('fill', function(d) {
                 return color(d.data.label);
             });
 
-        path.exit().remove();
+        path.exit()
+            .attr('class', 'exit')
+            .transition()
+            .duration(750)
+            .attrTween('d', arcTween)
+            .remove();
+
+        path.attr('class', 'update')
+            .transition()
+            .duration(750)
+            .attrTween('d', arcTween);
     }
 }
