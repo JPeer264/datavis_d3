@@ -12,7 +12,7 @@ function showCharts(selectionNum, selectionBin) {
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
-        duration: 0,
+        duration: 300,
         done: () => $('.summary').fadeIn(300)
     });
 
@@ -70,8 +70,6 @@ function showCharts(selectionNum, selectionBin) {
         manager.updateCharts();
     });
 }
-
-showCharts("walc", "sex");
 
 
 /* Loads the options from the json file and inserts it in the start page */
