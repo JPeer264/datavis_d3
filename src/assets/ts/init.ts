@@ -26,12 +26,12 @@ const showCharts = (stackedObj, xObj): void => {
             dataKey: 'sex',
             selector: '.piechart',
             keys: {
-                'F': {
-                    color: '#FF0000',
+                'f': {
+                    color: '#ff7e43',
                     name: 'Female'
                 },
-                'M': {
-                    color: '#0000FF',
+                'm': {
+                    color: '#5ebbd9',
                     name: 'Male'
                 }
             }
@@ -54,12 +54,12 @@ const showCharts = (stackedObj, xObj): void => {
             dataKey: 'famsize',
             selector: '.piechart3',
             keys: {
-                'GT3': {
-                    color: '#000',
+                'gt3': {
+                    color: '#3fb76f',
                     name: 'Greater than 3'
                 },
-                'LE3': {
-                    color: '#e9e9e9',
+                'le3': {
+                    color: '#b386be',
                     name: 'Lower than 3'
                 }
             }
@@ -122,24 +122,24 @@ const setChoices = (): void => {
         showCharts({
             key: 'sex',
             options: {
-                'F': {
-                    color: '#FF0000',
+                'f': {
+                    color: '#ff7e43',
                     name: 'Female'
                 },
-                'M': {
-                    color: '#0000FF',
+                'm': {
+                    color: '#5ebbd9',
                     name: 'Male'
                 }
             }
         }, {
-            key: 'Walc'
+            key: 'walc'
         });
     });
 
     /* Predefined choice 2: going out & parents cohabitation status */
     $('#choice-2').click(function(){
         showCharts({
-            key: 'Pstatus'
+            key: 'pstatus'
         }, {
             key: 'goout'
         });

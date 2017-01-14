@@ -3,11 +3,11 @@
         "name": "Students Age",
         "type": "numeric"
     },
-    "Medu": {
+    "medu": {
         "name": "Mothers Education",
         "type": "numeric"
     },
-    "Fedu": {
+    "fedu": {
         "name": "Fathers Education",
         "type": "numeric"
     },
@@ -63,7 +63,7 @@
         "name": "Family Size",
         "type": "binary"
     },
-    "Pstatus": {
+    "pstatus": {
         "name": "Parents Cohabitation Status",
         "type": "binary"
     },
