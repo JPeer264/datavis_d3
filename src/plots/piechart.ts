@@ -67,7 +67,7 @@ export class PieChart {
 
             this._current = i(0);
 
-            return function(t) { return arc(i(t), index); };
+            return t => arc(i(t), index);
         }
 
         const color = d3.scaleOrdinal(d3.schemeCategory20b)

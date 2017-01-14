@@ -8,11 +8,11 @@ import { ChartManager } from './ChartManager';
 
 const manager = new ChartManager('assets/data/students.csv');
 
-const showCharts = (...selections): void => {
+const showCharts = (stackedObj, xObj): void => {
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
-        duration: 0,
+        duration: 300,
         done: () => $('.summary').fadeIn(300)
     });
 
@@ -67,14 +67,11 @@ const showCharts = (...selections): void => {
 
 
         manager.addPieChart(piechart, piechart2, piechart3);
-        barchart.update(...selections);
+        barchart.update(stackedObj, xObj);
 
         manager.updateCharts();
     });
 };
-
-showCharts('schoolsup', 'Walc');
-
 
 /* Loads the options from the json file and inserts it in the start page */
 const loadOptions = (cb = function(result) {}): void => {
@@ -122,12 +119,30 @@ const setChoices = (): void => {
 
     /* Predefined choice 1: alcohol consumption and sex */
     $('#choice-1').click(function(){
-        showCharts('walc', 'sex');
+        showCharts({
+            key: 'sex',
+            options: {
+                'F': {
+                    color: '#FF0000',
+                    name: 'Female'
+                },
+                'M': {
+                    color: '#0000FF',
+                    name: 'Male'
+                }
+            }
+        }, {
+            key: 'Walc'
+        });
     });
 
     /* Predefined choice 2: going out & parents cohabitation status */
     $('#choice-2').click(function(){
-        showCharts('goout', 'pstatus');
+        showCharts({
+            key: 'Pstatus'
+        }, {
+            key: 'goout'
+        });
     });
 
     /* Custom choice: Ability to have custom choices */
@@ -136,7 +151,11 @@ const setChoices = (): void => {
         let selectionBin = $('#selection-2').val();
 
         if (selectionNum && selectionBin) {
-            showCharts(selectionNum, selectionBin);
+            showCharts({
+                key: selectionBin
+            }, {
+                key: selectionNum
+            });
         }
     });
 };

@@ -12,9 +12,9 @@ export class BarChart {
 
     // constructor(public selector: string = 'body', public className: string = 'chart') {
     constructor(private options) {
+        options.manager = options.manager || {}
         options.selector = options.selector || 'body',
         options.className = options.className || 'chart',
-        options.manager = options.manager || {}
 
         this.svg = d3.select(options.selector)
           .append('div')
@@ -36,14 +36,13 @@ export class BarChart {
 
     }
 
-    public prepareStackedData(...selections): Array<Object> {
-        const seperatedData = {};
-        const newData = {};
-        const result: any  = [];
+    public prepareStackedData(stackedObj, xObj) {
         const data = this.options.data.data;
-
-        const seperator = selections[0];
-        const chooser = selections[1];
+        const result: any = [];
+        const colors: Array<String> = [];
+        const chooser = xObj.key;
+        const seperator = stackedObj.key;
+        const seperatedData = {};
 
         for (let d of data) {
             if (!seperatedData[d[seperator]]) {
@@ -51,28 +50,42 @@ export class BarChart {
             }
 
             if (!seperatedData[d[seperator]][d[chooser]]) {
-                seperatedData[d[seperator]][d[chooser]] = 1
+                seperatedData[d[seperator]][d[chooser]] = 0
             }
 
             seperatedData[d[seperator]][d[chooser]] += 1;
         }
 
-        let x = [];
+        let xRange = [];
 
         for (let sKey in seperatedData) {
             let counter = 0;
             let appendArray = [];
+            let startPoint = 0;
+
+            // set color for z.domain
+            if (stackedObj.options && stackedObj.options[sKey].color) {
+                colors.push(stackedObj.options[sKey].color);
+            } else {
+                let randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+
+                colors.push(randomColor);
+            }
 
             for (let key in seperatedData[sKey]) {
-                let startPoint = 0;
-                const value: any = seperatedData[sKey][key];
+                let toAppend: any;
+                let value: any = seperatedData[sKey][key];
 
+                startPoint = 0;
+
+                // -- stacking --
+                // set the startPoint to
+                // the previous highest point
                 if (result.length > 0) {
                     startPoint = result[result.length - 1][counter][1];
                 }
 
-                let toAppend: any = [startPoint, value + startPoint];
-
+                toAppend      = [ startPoint, value + startPoint ];
                 toAppend.data = {
                     filterData: {
                         [seperator]: sKey,
@@ -82,9 +95,11 @@ export class BarChart {
 
                 appendArray.push(toAppend)
 
-
                 counter += 1;
             }
+
+            xRange = Object.keys(seperatedData[sKey])
+
 
             result.push(appendArray);
 
@@ -93,6 +108,11 @@ export class BarChart {
             result[result.length - 1].key = sKey;
         }
 
+        result.data = {
+            colors,
+            xRange
+        };
+
         return result;
     }
 
@@ -100,26 +120,30 @@ export class BarChart {
         $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
     }
 
-    public update(...selections): void {
+    public update(stackedObj, xObj): void {
+        const data = this.prepareStackedData(stackedObj, xObj);
+        console.log(data.data)
+        const isTooltip = false;
+        const manager = this.options.manager;
+        const stack = d3.stack();
+
         let tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
             .style('opacity', 0);
         let x = this.x;
         let y = this.y;
         let z = d3.scaleOrdinal()
-            .range(["#98abc5", "#8a89a6"]);
+            .range(data.data.colors);
         let width = this._width;
         let height = this._height;
 
-        const data = this.prepareStackedData(...selections);
-        const isTooltip = false;
-        const manager = this.options.manager;
-        const stack = d3.stack();
-
         // Scale the range of the data in the domains
-        x.domain([1, 2, 3, 4, 5]);
-        y.domain([0, 400]);
+        // @todo get max for y.domain
+        // @todo get right z.domain
+        x.domain(data.data.xRange);
+        y.domain([0, d3.max(data[1], d => d[1])]);
         z.domain(['sex']);
+        console.log('test')
 
         // https://bl.ocks.org/mbostock/3808234
         let barchart = this.svg
