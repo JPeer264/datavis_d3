@@ -1,4 +1,5 @@
 import d3 = require('d3');
+import $ = require('jquery');
 
 export class PieChart {
     public svg;
@@ -21,6 +22,13 @@ export class PieChart {
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
+
+        this.addHeader("h3");
+    }
+
+    // @todo Get name of the heading
+    public addHeader(tag:string, headerText: string = 'HEADER'): void {
+        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
     }
 
     public update(newData): void {
@@ -108,6 +116,7 @@ export class PieChart {
 
         // Adds the legend
         // @todo Add the full name of the key
+        // @todo Make sure the legend only renders once
         let legend = this.svg.append("g")
             .attr("class", "legend")
             .attr("x", 400)
