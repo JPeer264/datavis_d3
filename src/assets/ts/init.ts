@@ -20,7 +20,6 @@ const showCharts = (stackedObj, xObj, pieChartObj): void => {
     let counter = 1;
     for (let pieObj of pieChartObj) {
         pieObj.selector = ".piechart" + counter;
-        console.log(pieObj);
         counter += 1;
     }
 
@@ -30,8 +29,6 @@ const showCharts = (stackedObj, xObj, pieChartObj): void => {
             manager,
             data
         });
-
-        console.log(stackedObj.key);
 
         const pieCharts = [];
 
