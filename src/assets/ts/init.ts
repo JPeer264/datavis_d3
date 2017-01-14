@@ -8,18 +8,20 @@ import { ChartManager } from './ChartManager';
 
 const manager = new ChartManager('assets/data/students.csv');
 
-const showCharts = (selectionNum, selectionBin): void => {
+const showCharts = (...selections): void => {
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
-        duration: 300,
+        duration: 0,
         done: () => $('.summary').fadeIn(300)
     });
 
     manager.render((err, data) => {
         const barchart = new BarChart({
             selector: '.barchart',
-            manager: manager});
+            manager,
+            data
+        });
         const piechart = new PieChart(data.data, {
             dataKey: 'sex',
             selector: '.piechart',
@@ -63,13 +65,16 @@ const showCharts = (selectionNum, selectionBin): void => {
             }
         });
 
-        manager.addPieChart(piechart, piechart2, piechart3);
 
-        barchart.update(data.barinfo);
+        manager.addPieChart(piechart, piechart2, piechart3);
+        barchart.update(...selections);
 
         manager.updateCharts();
     });
 };
+
+showCharts('schoolsup', 'Walc');
+
 
 /* Loads the options from the json file and inserts it in the start page */
 const loadOptions = (cb = function(result) {}): void => {

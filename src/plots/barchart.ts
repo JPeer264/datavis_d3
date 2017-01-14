@@ -36,25 +36,61 @@ export class BarChart {
 
     }
 
-    public prepareData(data): Array<Object> {
+    public prepareStackedData(...selections): Array<Object> {
+        const seperatedData = {};
         const newData = {};
-        const result  = [];
+        const result: any  = [];
+        const data = this.options.data.data;
 
-        // sort them by x coordinate
+        const seperator = selections[0];
+        const chooser = selections[1];
+
         for (let d of data) {
-            try {
-                newData[d.x].push(d.y);
-            } catch (e) {
-                newData[d.x] = [ d.y ];
+            if (!seperatedData[d[seperator]]) {
+                seperatedData[d[seperator]] = {};
             }
+
+            if (!seperatedData[d[seperator]][d[chooser]]) {
+                seperatedData[d[seperator]][d[chooser]] = 1
+            }
+
+            seperatedData[d[seperator]][d[chooser]] += 1;
         }
 
-        // calculate the mean for every x coordinate and save into new array
-        for (let d in newData) {
-            result.push({
-                x: d,
-                y: d3.mean(newData[d])
-            });
+        let x = [];
+
+        for (let sKey in seperatedData) {
+            let counter = 0;
+            let appendArray = [];
+
+            for (let key in seperatedData[sKey]) {
+                let startPoint = 0;
+                const value: any = seperatedData[sKey][key];
+
+                if (result.length > 0) {
+                    startPoint = result[result.length - 1][counter][1];
+                }
+
+                let toAppend: any = [startPoint, value + startPoint];
+
+                toAppend.data = {
+                    filterData: {
+                        [seperator]: sKey,
+                        [chooser]: key
+                    }
+                }
+
+                appendArray.push(toAppend)
+
+
+                counter += 1;
+            }
+
+            result.push(appendArray);
+
+            // append as required in D3.stack()
+            result[result.length - 1].index = result.length - 1;
+            result[result.length - 1].key = sKey;
         }
 
         return result;
@@ -64,27 +100,36 @@ export class BarChart {
         $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
     }
 
-    public update(barinfo): void {
+    public update(...selections): void {
         let tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
             .style('opacity', 0);
         let x = this.x;
         let y = this.y;
+        let z = d3.scaleOrdinal()
+            .range(["#98abc5", "#8a89a6"]);
         let width = this._width;
         let height = this._height;
 
-        const data = barinfo.data;
-        const dataArray = this.prepareData(data);
+        const data = this.prepareStackedData(...selections);
         const isTooltip = false;
         const manager = this.options.manager;
+        const stack = d3.stack();
 
         // Scale the range of the data in the domains
         x.domain([1, 2, 3, 4, 5]);
-        y.domain([0, d3.max(data, d => d.y)]);
+        y.domain([0, 400]);
+        z.domain(['sex']);
 
         // https://bl.ocks.org/mbostock/3808234
-        let barchart = this.svg.selectAll('rect')
-            .data(dataArray);
+        let barchart = this.svg
+            .append("g")
+            .selectAll("g")
+            .data(data)
+            .enter().append("g")
+              .attr("fill", d => z(d.key))
+            .selectAll("rect")
+            .data(d => d);
 
         // EXIT old elements not present in new data.
         barchart.exit()
@@ -93,30 +138,25 @@ export class BarChart {
 
         // UPDATE old elements present in new data.
         barchart.attr('class', 'update')
-            .attr('x', d => x(d.x) )
+            .attr("x", (d, i) => x(i + 1))
             .attr('width', x.bandwidth())
             .transition(300)
-            .attr('y', d => y(d.y) )
-            .attr('height', d => height - y(d.y))
+            .attr("y", d => y(d[1]))
+            .attr("height", d => y(d[0]) - y(d[1]))
 
-        // append the rectangles for the bar chart
-        barchart.enter().append('rect')
-            .attr('class', 'enter')
+        barchart.enter().append("rect")
             .attr('class', 'interactive-rect')
-            .attr('id', (d, i) => {
-                return 'interactive-rect-' + i;
-            })
-            .attr('x', d => x(d.x) )
-            .attr('width', x.bandwidth())
-            .attr('y', d => y(d.y) )
-            .attr('height', d => height - y(d.y))
+            .attr("x", (d, i) => x(i + 1))
+            .attr("y", d => y(d[1]))
+            .attr("height", d => y(d[0]) - y(d[1]))
+            .attr("width", x.bandwidth())
             // initialize event listeners
             .on('mouseover', d => {
                 if (isTooltip) {
                     tooltip.transition()
                         .duration(200)
                         .style('opacity', .9);
-                    tooltip.html(d.y)
+                    tooltip.html('test')
                         .style('left', (d3.event.pageX) + 'px')
                         .style('top', (d3.event.pageY - 28) + 'px');
                 }
@@ -128,31 +168,25 @@ export class BarChart {
                         .style('opacity', 0);
                 }
             })
-            .on('click', (d, i) => {
-                console.log(d)
-                if ($('#interactive-rect-' + i).hasClass('rect-active')) {
+            .on('click', function (d, i) {
+                console.log($(this).attr('id'))
+                const $this = $(this);
+                if ($this.hasClass('rect-active')) {
                     $('.interactive-rect').removeClass('low-alpha rect-active');
 
-                    // @todo remove filter
                     manager.releaseFilter();
                     manager.updateCharts();
                     return;
                 }
 
-                // @todo add instead of `sex` and `goout` data from manager.optionOne
-                // @todo add instrad of 'M' the current z from the stacked bar chart
-                manager.filterData({
-                    famsup: 'yes',
-                    goout: d.x
-                });
+                manager.filterData(d.data.filterData);
 
                 manager.updateCharts();
 
                 $('.interactive-rect').removeClass('low-alpha rect-active');
                 $('.interactive-rect').addClass('low-alpha');
-                $('#interactive-rect-' + i).removeClass('low-alpha');
-                $('#interactive-rect-' + i).addClass('rect-active');
-                // @todo apply filter
+                $this.removeClass('low-alpha');
+                $this.addClass('rect-active');
             });
 
         // // add the x Axis
@@ -163,8 +197,6 @@ export class BarChart {
         // // add the y Axis
         // barchart.append('g')
         //     .call(d3.axisLeft(y));
-
-        return barchart;
     }
 
 }

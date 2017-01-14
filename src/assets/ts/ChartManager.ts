@@ -3,6 +3,7 @@ import d3 = require('d3');
 export class ChartManager {
     public data: Array<Object>;
     public pieData: Array<Object>;
+    public barData: Array<Object>;
     public pieCharts: Array<any> = [];
     public barCharts: Array<any> = [];
 
@@ -22,12 +23,10 @@ export class ChartManager {
                 });
            }
 
-           this.data = data;
-           this.pieData = data;
+           this.data = this.pieData = data;
 
            cb(err, {
-               data,
-               barinfo
+               data
            });
         });
     }
