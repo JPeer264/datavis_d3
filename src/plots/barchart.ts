@@ -122,7 +122,6 @@ export class BarChart {
 
     public update(stackedObj, xObj): void {
         const data = this.prepareStackedData(stackedObj, xObj);
-        console.log(data.data)
         const isTooltip = false;
         const manager = this.options.manager;
         const stack = d3.stack();
@@ -138,22 +137,50 @@ export class BarChart {
         let height = this._height;
 
         // Scale the range of the data in the domains
-        // @todo get max for y.domain
         // @todo get right z.domain
         x.domain(data.data.xRange);
         y.domain([0, d3.max(data[data.length - 1], d => d[1])]);
         z.domain(['sex']);
-        console.log('test')
 
         // https://bl.ocks.org/mbostock/3808234
-        let barchart = this.svg
-            .append("g")
+        let barchart = this.svg.append("g")
             .selectAll("g")
             .data(data)
             .enter().append("g")
               .attr("fill", d => z(d.key))
             .selectAll("rect")
             .data(d => d);
+
+        // Adds the legend
+        // @todo Add the full name of the key
+        let legend = this.svg.append("g")
+            .attr("class", "legend")
+            .attr("x", 666 - 65)
+            .attr("y", 25)
+            .attr("height", 100)
+            .attr("width", 100);
+
+        legend.selectAll('g').data(data)
+            .enter()
+            .append('g')
+            .each(function(d, i) {
+                let g = d3.select(this);
+                g.append("rect")
+                    .attr("x", width - 170)
+                    .attr("y", 10 + i*40)
+                    .attr("width", 30)
+                    .attr("height", 30)
+                    .style("fill", data.data.colors[i]);
+
+                g.append("text")
+                    .attr("x", width - 130)
+                    .attr("y", 24 + i*40 + 9)
+                    .attr("height",30)
+                    .attr("width",100)
+                    .style("fill", data.data.colors[i])
+                    .text(data[i]['key'])
+                        .attr("font-size", "18pt");
+            });
 
         // EXIT old elements not present in new data.
         barchart.exit()
@@ -193,7 +220,6 @@ export class BarChart {
                 }
             })
             .on('click', function (d, i) {
-                console.log($(this).attr('id'))
                 const $this = $(this);
                 if ($this.hasClass('rect-active')) {
                     $('.interactive-rect').removeClass('low-alpha rect-active');
