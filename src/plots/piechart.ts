@@ -12,6 +12,8 @@ export class PieChart {
         options.width = 360;
         options.height = 360;
 
+        this.addHeader("h3");
+
         this.svg = d3.select(this.options.selector)
             .append('div')
             .classed('svg-container', true)
@@ -22,13 +24,11 @@ export class PieChart {
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
-
-        this.addHeader("h3");
     }
 
     // @todo Get name of the heading
     public addHeader(tag:string, headerText: string = 'HEADER'): void {
-        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
+        $(this.options.selector).append(`<${tag}>${headerText}</${tag}>`);
     }
 
     public update(newData): void {

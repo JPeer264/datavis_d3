@@ -16,6 +16,8 @@ export class BarChart {
         options.selector = options.selector || 'body',
         options.className = options.className || 'chart',
 
+        this.addHeader("h1");
+
         this.svg = d3.select(options.selector)
           .append('div')
             .classed('svg-container', true)
@@ -33,8 +35,6 @@ export class BarChart {
 
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
-
-        this.addHeader("h1");
     }
 
     public prepareStackedData(stackedObj, xObj) {
@@ -119,7 +119,7 @@ export class BarChart {
 
     // @todo Get name of the heading
     public addHeader(tag:string, headerText: string = 'HEADER'): void {
-        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
+        $(this.options.selector).append(`<${tag}>${headerText}</${tag}>`);
     }
 
     public update(stackedObj, xObj): void {

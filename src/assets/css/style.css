@@ -40,6 +40,7 @@ h1 {
     font-weight: 600;
     font-style: italic;
     font-size: 3em;
+    margin-bottom: 1em;
 }
 
 h3 {
@@ -90,6 +91,25 @@ h3 {
 
 .choice--custom form select {
     color: #5ebbd9;
+}
+
+.summary {
+    margin-top: 1em;
+}
+
+.backBtn {
+    border: 2px solid #bbb;
+    color: #bbb;
+    padding: .8em;
+    float: left;
+    background: #eee;
+    transition: all .2s;
+}
+
+.backBtn:hover {
+    border: 2px solid #444;
+    color: #444;
+    cursor: pointer;
 }
 
 .disabled {
