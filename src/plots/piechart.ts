@@ -89,9 +89,10 @@ export class PieChart {
             .append('path')
             .attr('class', 'enter')
             .attr('d', arc)
-            .attr('fill', function(d) {
-                return color(d.data.label);
-            });
+            .attr('fill', d => color(d.data.label))
+            .transition()
+            .duration(750)
+            .attrTween('d', arcTween);
 
         path.exit()
             .attr('class', 'exit')
