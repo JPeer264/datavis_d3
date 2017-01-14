@@ -141,7 +141,7 @@ export class BarChart {
         // @todo get max for y.domain
         // @todo get right z.domain
         x.domain(data.data.xRange);
-        y.domain([0, d3.max(data[1], d => d[1])]);
+        y.domain([0, d3.max(data[data.length - 1], d => d[1])]);
         z.domain(['sex']);
         console.log('test')
 
