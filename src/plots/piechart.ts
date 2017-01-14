@@ -105,5 +105,39 @@ export class PieChart {
             .transition()
             .duration(750)
             .attrTween('d', arcTween);
+
+        // Adds the legend
+        // @todo Add the full name of the key
+        // @todo Change the color of the labels
+        let legend = this.svg.append("g")
+            .attr("class", "legend")
+            .attr("x", 400)
+            .attr("y", 250)
+            .attr("height", 100)
+            .attr("width", 100);
+
+        console.log('fill', d => color(d.data.label));
+
+        legend.selectAll('g').data(pieData)
+            .enter()
+            .append('g')
+            .each(function(d, i) {
+                let g = d3.select(this);
+                g.append("rect")
+                    .attr("x", 0)
+                    .attr("y", 230 + i*40)
+                    .attr("width", 30)
+                    .attr("height", 30)
+                    .style("fill", '#000000');
+
+                g.append("text")
+                    .attr("x", 44)
+                    .attr("y", 242 + i*40 + 9)
+                    .attr("height",30)
+                    .attr("width",100)
+                    .style("fill", '#000000')
+                    .text(pieData[i]['label'])
+                    .attr("font-size", "18pt");
+            });
     }
 }
