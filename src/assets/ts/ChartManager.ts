@@ -42,8 +42,6 @@ export class ChartManager {
     filterData(filterObject) {
         const sortedPieData = [];
 
-        console.log(filterObject)
-
         // sort pieData
         for (let item of this.data) {
             let acceptArray = [];

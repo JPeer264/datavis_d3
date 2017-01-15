@@ -1,5 +1,8 @@
+import $  = require('jquery');
 import d3 = require('d3');
-import $ = require('jquery');
+
+import { chartOptions } from '../assets/data/options';
+import { generateColorArray } from './helper';
 
 export class BarChart {
     public x;
@@ -10,23 +13,22 @@ export class BarChart {
     public _width:number  = 960; // - this.margin.left - this.margin.right;
     public _height:number = 500; //- this.margin.top  - this.margin.bottom;
 
-    // constructor(public selector: string = 'body', public className: string = 'chart') {
     constructor(private options) {
-        options.manager = options.manager || {}
-        options.selector = options.selector || 'body',
+        options.manager   = options.manager || {}
+        options.selector  = options.selector || 'body',
         options.className = options.className || 'chart',
 
         this.addHeader("h1");
 
         this.svg = d3.select(options.selector)
-          .append('div')
+           .append('div')
             .classed('svg-container', true)
             .classed('svg-container--barchart', true)
-          .append('svg')
+           .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('viewBox', '0 0 1000 800')
             .classed('svg-content-responsive', true)
-          .append('g')
+           .append('g')
             // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.x = d3.scaleBand()
@@ -37,12 +39,14 @@ export class BarChart {
             .range([this._height, 0]);
     }
 
-    public prepareStackedData(stackedObj, xObj, data = this.options.data.data) {
+    public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
+        const chooser = stackedX.key;
+        const seperator = stackedLabel.key;
+        const keyOptions = stackedLabel.options;
         const result: any = [];
-        const colors: Array<String> = [];
-        const chooser = xObj.key;
-        const seperator = stackedObj.key;
         const seperatedData = {};
+
+        let xRange = [];
 
         for (let d of data) {
             if (!seperatedData[d[seperator]]) {
@@ -56,32 +60,22 @@ export class BarChart {
             seperatedData[d[seperator]][d[chooser]] += 1;
         }
 
-        let xRange = [];
 
-        for (let sKey in seperatedData) {
-            let counter = 0;
+        for (let label in seperatedData) {
+            let counter     = 0;
+            let startPoint  = 0;
             let appendArray = [];
-            let startPoint = 0;
 
             // hardcoded... fill up missing keys
-            seperatedData[sKey][1] = seperatedData[sKey][1] || 0;
-            seperatedData[sKey][2] = seperatedData[sKey][2] || 0;
-            seperatedData[sKey][3] = seperatedData[sKey][3] || 0;
-            seperatedData[sKey][4] = seperatedData[sKey][4] || 0;
-            seperatedData[sKey][5] = seperatedData[sKey][5] || 0;
+            seperatedData[label][1] = seperatedData[label][1] || 0;
+            seperatedData[label][2] = seperatedData[label][2] || 0;
+            seperatedData[label][3] = seperatedData[label][3] || 0;
+            seperatedData[label][4] = seperatedData[label][4] || 0;
+            seperatedData[label][5] = seperatedData[label][5] || 0;
 
-            // set color for z.domain
-            if (stackedObj.options && stackedObj.options[sKey].color) {
-                colors.push(stackedObj.options[sKey].color);
-            } else {
-                let randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
-
-                colors.push(randomColor);
-            }
-
-            for (let key in seperatedData[sKey]) {
+            for (let key in seperatedData[label]) {
                 let toAppend: any;
-                let value: any = seperatedData[sKey][key];
+                let value: any = seperatedData[label][key];
 
                 startPoint = 0;
 
@@ -95,7 +89,7 @@ export class BarChart {
                 toAppend      = [ startPoint, value + startPoint ];
                 toAppend.data = {
                     filterData: {
-                        [seperator]: sKey,
+                        [seperator]: label,
                         [chooser]: key
                     }
                 }
@@ -105,18 +99,19 @@ export class BarChart {
                 counter += 1;
             }
 
-            xRange = Object.keys(seperatedData[sKey])
+            xRange = Object.keys(seperatedData[label])
 
 
             result.push(appendArray);
 
             // append as required in D3.stack()
             result[result.length - 1].index = result.length - 1;
-            result[result.length - 1].key = sKey;
+            result[result.length - 1].key = label;
         }
 
+        console.log(stackedLabel.options)
         result.data = {
-            colors,
+            colorArray: generateColorArray(keyOptions, seperatedData),
             xRange
         };
 
@@ -129,21 +124,21 @@ export class BarChart {
     }
 
     public update(data = undefined): void {
-        const self = this;
+        const self        = this;
+        const stack       = d3.stack();
+        const manager     = this.options.manager;
+        const isTooltip   = false;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
-        const isTooltip = false;
-        const manager = this.options.manager;
-        const stack = d3.stack();
 
-        let tooltip = d3.select('body').append('div')
-            .attr('class', 'tooltip')
-            .style('opacity', 0);
+        let width  = this._width;
+        let height = this._height;
         let x = this.x;
         let y = this.y;
         let z = d3.scaleOrdinal()
-            .range(stackedData.data.colors);
-        let width = this._width;
-        let height = this._height;
+            .range(stackedData.data.colorArray);
+        let tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
 
         // Scale the range of the data in the domains
         // @todo get right z.domain
@@ -178,14 +173,14 @@ export class BarChart {
                     .attr("y", 10 + i*40)
                     .attr("width", 30)
                     .attr("height", 30)
-                    .style("fill", stackedData.data.colors[i]);
+                    .style("fill", stackedData.data.colorArray[i]);
 
                 g.append("text")
                     .attr("x", width - 130)
                     .attr("y", 24 + i*40 + 9)
                     .attr("height",30)
                     .attr("width",100)
-                    .style("fill", stackedData.data.colors[i])
+                    .style("fill", stackedData.data.colorArray[i])
                     .text(stackedData[i]['key'])
                         .attr("font-size", "18pt");
             });

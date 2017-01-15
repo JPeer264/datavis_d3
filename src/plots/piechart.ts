@@ -1,16 +1,19 @@
 import $  = require('jquery');
 import d3 = require('d3');
 
+import { chartOptions } from '../assets/data/options';
+import { generateColorArray } from './helper';
+
 export class PieChart {
     public svg;
 
     constructor(public data: Object, private options) {
         options = options || {};
-        options.dataKey = options.dataKey || 'sex';
         options.keys = options.keys || {}
-        options.selector = options.selector || 'body';
         options.width = 360;
         options.height = 360;
+        options.dataKey = options.dataKey || 'sex';
+        options.selector = options.selector || 'body';
 
         this.addHeader("h3");
 
@@ -31,15 +34,13 @@ export class PieChart {
         $(this.options.selector).append(`<${tag}>${headerText}</${tag}>`);
     }
 
-    public update(newData): void {
-        const self = this;
+    public update(data = this.data): void {
         const radius = Math.min(this.options.width, this.options.height) / 2;
-        const dataKey = this.options.dataKey;
-        const globalData = newData || this.data;
+        const seperator = this.options.key;
 
         const pieData = [];
-        const tempData = {};
-        const colorArray = [];
+        const keyOptions = this.options.options;
+        const seperatedData = {};
 
         const arcTween = function (d, index) {
             var i = d3.interpolate(this._current, d);
@@ -50,23 +51,16 @@ export class PieChart {
         }
 
         // split values from dattaKey
-        for (let item in globalData) {
-            if (!tempData[globalData[item][dataKey]]) {
-                tempData[globalData[item][dataKey]] = 1;
+        for (let d in data) {
+            if (!seperatedData[data[d][seperator]]) {
+                seperatedData[data[d][seperator]] = 1;
             } else {
-                tempData[globalData[item][dataKey]] += 1;
+                seperatedData[data[d][seperator]] += 1;
             }
         }
 
-        for (let label in tempData) {
-            const count = tempData[label];
-            const keys = this.options.keys[label];
-
-            if (!!keys) {
-                colorArray.push(keys.color);
-            } else {
-                colorArray.push("#"+((1<<24)*Math.random()|0).toString(16));
-            }
+        for (let label in seperatedData) {
+            const count = seperatedData[label];
 
             if (label === 'undefined') {
                 continue;
@@ -78,6 +72,10 @@ export class PieChart {
             });
         }
 
+          // ================ //
+         // == add charts == //
+        // ================ //
+        const colorArray = generateColorArray(keyOptions, Object.keys(seperatedData));
         const color = d3.scaleOrdinal(d3.schemeCategory20b)
             .range(colorArray);
 
@@ -127,11 +125,9 @@ export class PieChart {
         legend.selectAll('g').data(pieData)
             .enter()
             .append('g')
-            .each(function(d, i) {
+            .each(function (d, i) {
                 let g = d3.select(this);
-
-                const key = Object.keys(self.options.keys)[i];
-                let fillColor = self.options.keys[key].color;
+                let fillColor = colorArray[i]
 
                 g.append("rect")
                     .attr("x", 0)

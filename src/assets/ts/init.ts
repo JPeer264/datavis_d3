@@ -1,11 +1,10 @@
 import $  = require('jquery');
 import d3 = require('d3');
-import '../../vendor/js/foundation.js';
 
-import { jsonData, pieCharts } from '../data/options';
 import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
 import { ChartManager } from './ChartManager';
+import { jsonData, chartOptions } from '../data/options';
 
 const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
     const manager = new ChartManager('assets/data/students.csv');
@@ -20,7 +19,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
 
     manager.render((err, data) => {
         const pieCharts = [];
-        const barchart = new BarChart({
+        const mainBarChart = new BarChart({
             selector: '#main-barchart',
             interactive: true,
             manager,
@@ -47,31 +46,21 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
             manager,
             data,
             stacked: {
-                label: {
-                    key: 'pstatus'
-                },
-                x: {
-                    key: 'goout'
-                }
+                label: jsonData.pstatus,
+                x: jsonData.goout
             }
         }));
 
           // ============ //
          // == update == //
         // ============ //
-        barchart.update();
+        mainBarChart.update();
         manager.updateCharts();
     });
 };
 
-showCharts({
-    key: 'pstatus'
-}, {
-    key: 'goout'
-}, [ pieCharts.romantic, pieCharts.sex, pieCharts.address ]);
-
 // Loads the options from the json file and inserts it in the start page
-const loadOptions = (cb = function(jsonData) {}): void => {
+const loadOptions = (): void => {
     const typeObj: Object = {};
 
     let counter: number = 1;
@@ -94,8 +83,6 @@ const loadOptions = (cb = function(jsonData) {}): void => {
 
         counter += 1;
     }
-
-    cb(jsonData);
 };
 
 // Adds functionality to the buttons so that the user can set his choices
@@ -112,31 +99,13 @@ const setChoices = (): void => {
     });
 
     // Predefined choice 1: alcohol consumption and sex
-    $('#choice-1').click(function(){
-        showCharts({
-            key: 'sex',
-            options: {
-                'f': {
-                    color: '#ff7e43',
-                    name: 'Female'
-                },
-                'm': {
-                    color: '#5ebbd9',
-                    name: 'Male'
-                }
-            }
-        }, {
-            key: 'walc'
-        }, [ pieCharts.romantic, pieCharts.pstatus, pieCharts.address ]);
+    $('#choice-1').click(() => {
+        showCharts(jsonData.sex, jsonData.walc, [ jsonData.romantic, jsonData.pstatus, jsonData.address ]);
     });
 
     // Predefined choice 2: going out & parents cohabitation status
-    $('#choice-2').click(function(){
-        showCharts({
-            key: 'pstatus'
-        }, {
-            key: 'goout'
-        }, [ pieCharts.romantic, pieCharts.sex, pieCharts.address ]);
+    $('#choice-2').click(() => {
+        showCharts(jsonData.pstatus, jsonData.goout, [ jsonData.romantic, jsonData.sex, jsonData.address ]);
     });
 
     // Custom choice: Ability to have custom choices
@@ -146,18 +115,14 @@ const setChoices = (): void => {
         let selectionBin = $('#selection-2').val();
 
         if (selectionNum && selectionBin) {
-            showCharts({
-                key: selectionBin
-            }, {
-                key: selectionNum
-            }, [ pieCharts.romantic, pieCharts.pstatus, pieCharts.sex ]);
+            showCharts(jsonData[selectionBin], jsonData[selectionNum], [ jsonData.romantic, jsonData.pstatus, jsonData.sex ]);
         }
     });
 };
 
-function showChoices(){
+const showChoices = () => {
     // Shows the summary page
-    $('.backBtn').click(function(){
+    $('.backBtn').click(() => {
         $('.summary').fadeOut({
             duration: 300,
             done: () => {
@@ -167,7 +132,7 @@ function showChoices(){
             }
         });
     });
-}
+};
 
 loadOptions();
 setChoices();
