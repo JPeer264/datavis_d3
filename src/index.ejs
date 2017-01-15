@@ -9,18 +9,20 @@
     </head>
     <body>
         <div class="board--choices">
-            <h1>What' ya wanna know, dude?</h1>
+            <div class="row header">
+                <h1>What do you want to know?</h1>
+                <h4>Please select the data you want to compare</h4>
+            </div>
 
             <div class="choices row">
-
                 <div class="choice--wrapper column small-12 medium-4">
-                    <div class="choice choice--default" id="choice-1"></div>
-                    <p>Alcohol & Sex</p>
+                    <img class="choice choice--default" id="choice-1" src="assets/img/choice.svg" />
+                    <p>Alcohol Consumption &<br>Sex</p>
                 </div>
 
                 <div class="choice--wrapper column small-12 medium-4">
-                    <div class="choice choice--default" id="choice-2"></div>
-                    <p>Going out & Parents</p>
+                    <img class="choice choice--default" id="choice-2" src="assets/img/choice.svg" />
+                    <p>Going out with friends &<br>Parents Cohabitation Status</p>
                 </div>
 
                 <div class="choice--wrapper column small-12 medium-4">
@@ -34,15 +36,15 @@
                             </select>
                         </form>
                     </div>
-                    <p class="disabled" id="choice-3">Compare custom</p>
+                    <p class="disabled" id="choice-3">Compare custom choices</p>
                 </div>
 
             </div>
 
             <div class="row">
                 <div class="column small-12 text-center info">
-                    <small>This App uses the <a href="https://d3js.org/">D3.v4.js</a>
-                        Javascript library and a <a href="https://www.kaggle.com/uciml/student-alcohol-consumption">dataset</a>
+                    <small>This app uses the <a href="https://d3js.org/" target="_blank">D3.v4.js</a>
+                        Javascript library and a <a href="https://www.kaggle.com/uciml/student-alcohol-consumption" target="_blank">dataset</a>
                         about students.</small>
                 </div>
             </div>

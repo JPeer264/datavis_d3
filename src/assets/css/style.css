@@ -54,7 +54,11 @@ h3 {
 }
 
 .board--choices h1 {
-    margin: 1.2em 0;
+    margin: 1.2em 0 .1em 0;
+}
+
+.board--choices h4 {
+    margin-bottom: 3em;
 }
 
 .choice--wrapper {
@@ -65,7 +69,7 @@ h3 {
 
 .choice {
     width: 100%;
-    height: 18vw;
+    height: 17vw;
     margin-bottom: .7em;
 }
 
@@ -84,6 +88,7 @@ h3 {
 
 .choice + p {
     cursor: pointer;
+    font-size: .9em;
 }
 
 .choice--custom form {
@@ -115,7 +120,7 @@ h3 {
 }
 
 .disabled {
-    color: #ccc;
+    color: #999;
     cursor: not-allowed !important;
 }
 
@@ -146,9 +151,13 @@ small {
 }
 
 .info {
-    margin-top: 3em;
+    margin-top: 3.2em;
 }
 
 .info a {
     color: #666;
+}
+
+.row {
+    max-width: 1200px;
 }
