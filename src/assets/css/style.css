@@ -27,6 +27,10 @@
     pointer-events: none;
 }
 
+.tooltip strong {
+    font-size: 1.3em;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     background: url('../img/bg.svg') no-repeat center center fixed;
@@ -148,8 +152,12 @@ h3 {
     transition: .1s opacity;
 }
 
-.rect:hover, .path:hover {
+.rect:hover {
     cursor: pointer;
+    opacity: .8;
+}
+
+.path:hover {
     opacity: .8;
 }
 

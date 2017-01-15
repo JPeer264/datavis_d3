@@ -257,11 +257,11 @@ export class BarChart {
                         textValue = chartOptions[value].name;
                     }
 
-                    text += `${jsonData[key].name}: <b>${textValue}</b><br />`;
+                    text += `${jsonData[key].name}: <b>${textValue}</b><br>`;
                 }
 
                 self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
-                self.tooltip.html(`<b>${amount} People</b></br>${text}`);
+                self.tooltip.html(`<strong>${amount} People</strong><br>${text}`);
             })
             .on('click', function (d, i) {
                 const $this = $(this);
