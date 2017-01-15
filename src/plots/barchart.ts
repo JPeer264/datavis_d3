@@ -247,6 +247,7 @@ export class BarChart {
                 const yPosition = d3.mouse($('body')[0])[1] - 50 - $(window).scrollTop() - ($('.tooltip').height() / 2);
 
                 let text = '';
+                let amount = d[1] - d[0];
 
                 for (let key in d.data.filterData) {
                     let value = d.data.filterData[key];
@@ -256,11 +257,11 @@ export class BarChart {
                         textValue = chartOptions[value].name;
                     }
 
-                    text += jsonData[key].name + ': <b>' + textValue + '</b><br />'
+                    text += `${jsonData[key].name}: <b>${textValue}</b><br />`;
                 }
 
                 self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
-                self.tooltip.html(text)
+                self.tooltip.html(`<b>${amount} People</b></br>${text}`);
             })
             .on('click', function (d, i) {
                 const $this = $(this);
