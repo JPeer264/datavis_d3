@@ -109,7 +109,6 @@ export class BarChart {
             result[result.length - 1].key = label;
         }
 
-        console.log(stackedLabel.options)
         result.data = {
             colorArray: generateColorArray(keyOptions, seperatedData),
             xRange

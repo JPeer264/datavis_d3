@@ -1,10 +1,4 @@
 export const jsonData = {
-    traveltime: {
-        key: 'traveltime',
-        name: 'Traveltime to School',
-        type: 'numeric',
-        options: undefined
-    },
     studytime: {
         key: 'studytime',
         name: 'Weekly Studytime',
@@ -51,7 +45,7 @@ export const jsonData = {
         key: 'school',
         name: 'Student\'s School',
         type: 'binary',
-        options: undefined
+        options: ['gp', 'ms']
     },
     sex: {
         key: 'sex',
@@ -69,7 +63,7 @@ export const jsonData = {
         key: 'famsize',
         name: 'Family Size',
         type: 'binary',
-        options: undefined
+        options: ['le3', 'gt3']
     },
     pstatus: {
         key: 'pstatus',
@@ -81,48 +75,48 @@ export const jsonData = {
         key: 'guardian',
         name: 'Student\'s Guardian',
         type: 'binary',
-        options: undefined
+        options: ['mother', 'father', 'other']
     },
     schoolsup: {
         key: 'schoolsup',
         name: 'Extra Educational Support',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     famsup: {
         key: 'famsup',
         name: 'Family Educational Support',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     activities: {
         key: 'activities',
         name: 'Extra Curricular Activities',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     nursery: {
         key: 'nursery',
         name: 'Attendance at Nursery School',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     higher: {
         key: 'higher',
         name: 'Wants to take Higher Education',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     internet: {
         key: 'internet',
         name: 'Home Internet Access',
         type: 'binary',
-        options: undefined
+        options: ['yes', 'no']
     },
     romantic: {
         key: 'romantic',
         name: 'Romantic Relationship',
         type: 'binary',
-        options: ['no', 'yes']
+        options: ['yes', 'no']
     }
 };

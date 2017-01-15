@@ -12,10 +12,9 @@ export class PieChart {
         options.keys = options.keys || {}
         options.width = 360;
         options.height = 360;
-        options.dataKey = options.dataKey || 'sex';
         options.selector = options.selector || 'body';
 
-        this.addHeader("h3");
+        this.addHeader("h3", this.options.name);
 
         this.svg = d3.select(this.options.selector)
             .append('div')
@@ -127,7 +126,9 @@ export class PieChart {
             .append('g')
             .each(function (d, i) {
                 let g = d3.select(this);
-                let fillColor = colorArray[i]
+                let fillColor = colorArray[i];
+                let label = pieData[i]['label'];
+                let name = chartOptions[label].name;
 
                 g.append("rect")
                     .attr("x", 0)
@@ -142,7 +143,7 @@ export class PieChart {
                     .attr("height",30)
                     .attr("width",100)
                     .style("fill", fillColor)
-                    .text(pieData[i]['label'])
+                    .text(name)
                     .attr("font-size", "18pt");
             });
     }
