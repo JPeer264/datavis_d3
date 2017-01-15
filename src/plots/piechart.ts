@@ -6,7 +6,6 @@ import { generateColorArray } from './helper';
 
 export class PieChart {
     public svg;
-    public legend;
 
     constructor(public data: Object, private options) {
         options = options || {};
@@ -27,13 +26,6 @@ export class PieChart {
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
-
-        this.legend = this.svg.append('g')
-            .attr('class', 'legend')
-            .attr('x', 0)
-            .attr('y', 250)
-            .attr('height', 100)
-            .attr('width', 100);
     }
 
     // @todo Get name of the heading
@@ -44,6 +36,7 @@ export class PieChart {
     public update(data = this.data): void {
         const radius = Math.min(this.options.width, this.options.height) / 2;
         const seperator = this.options.key;
+
 
         const pieData = [];
         const keyOptions = this.options.options;
@@ -66,12 +59,8 @@ export class PieChart {
             }
         }
 
-        for (let label in seperatedData) {
+        for (let label of this.options.options) {
             const count = seperatedData[label];
-
-            if (label === 'undefined') {
-                continue;
-            }
 
             pieData.push({
                 label,
@@ -108,6 +97,10 @@ export class PieChart {
             .attrTween('d', arcTween);
 
         path.attr('class', 'update')
+            .attr('fill', d => {
+                return chartOptions[d.data.label].color
+                // console.log(d)
+            })
             .transition()
             .duration(750)
             .attrTween('d', arcTween);
@@ -119,11 +112,16 @@ export class PieChart {
             .attrTween('d', arcTween)
             .remove();
 
-        // Adds the legend
-        // @todo Add the full name of the key
-        this.legend.selectAll('g').data(pieData)
-            .enter()
+        const legend = this.svg
+            .selectAll('g').data(pieData);
+
+        const legendEnter = legend.enter()
             .append('g')
+            .attr('class', 'legend')
+            .attr('x', 0)
+            .attr('y', 250)
+            .attr('height', 100)
+            .attr('width', 100)
             .each(function (d, i) {
                 let g = d3.select(this);
                 let label = pieData[i]['label'];
@@ -145,5 +143,10 @@ export class PieChart {
                     .text(name)
                         .attr('font-size', '24pt');
             });
+
+        legend.exit().remove()
+
+        // Adds the legend
+        // @todo Add the full name of the key
     }
 }
