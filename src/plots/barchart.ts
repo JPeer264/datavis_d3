@@ -136,12 +136,12 @@ export class BarChart {
         const isTooltip   = false;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
+        console.log(stackedData.data.colorArray)
+
         let width  = this._width;
         let height = this._height;
         let x = this.x;
         let y = this.y;
-        let z = d3.scaleOrdinal()
-            .range(stackedData.data.colorArray);
         let tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
             .style('opacity', 0);
@@ -164,14 +164,14 @@ export class BarChart {
                     .attr('y', 10 + i * 40)
                     .attr('width', 30)
                     .attr('height', 30)
-                    .style('fill', stackedData.data.colorArray[i]);
+                    .style('fill', d => chartOptions[d.key].color);
 
                 g.append('text')
                     .attr('x', width - 130)
                     .attr('y', 24 + i * 40 + 9)
                     .attr('height',30)
                     .attr('width',100)
-                    .style('fill', stackedData.data.colorArray[i])
+                    .style('fill', d => chartOptions[d.key].color)
                     .text(chartOptions[d.key].name)
                         .attr('font-size', '18pt');
             });
@@ -184,7 +184,7 @@ export class BarChart {
             .attr('class', 'category');
 
         const categoriesUpdated = categories.merge(categoriesEntered)
-            .attr('fill', d => z(d.key));
+            .attr('fill', d => chartOptions[d.key].color);
 
         categories.exit().remove();
 
