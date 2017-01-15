@@ -2,7 +2,7 @@ import $  = require('jquery');
 import d3 = require('d3');
 
 import { chartOptions } from '../assets/data/options';
-import { generateColorArray } from './helper';
+import { generateColorArray, getStackedNames } from './helper';
 
 export class BarChart {
     public x;
@@ -19,7 +19,7 @@ export class BarChart {
         options.selector  = options.selector || 'body';
         options.className = options.className || 'chart';
 
-        this.addHeader("h1", this.options.stacked.x.name);
+        this.addHeader("h1", getStackedNames(this.options.stacked));
 
         this.svg = d3.select(options.selector)
            .append('div')
