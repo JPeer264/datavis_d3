@@ -145,8 +145,6 @@ export class BarChart {
         let width = this._width;
         let height = this._height;
 
-        console.log(data);
-
         // Scale the range of the data in the domains
         // @todo get right z.domain
         x.domain(stackedData.data.xRange);

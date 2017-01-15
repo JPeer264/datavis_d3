@@ -83,4 +83,59 @@ export const jsonData = {
         name: "Romantic Relationship",
         type: "binary"
     }
+};
+
+export const pieCharts = {
+    romantic: {
+        dataKey: 'romantic',
+        keys: {
+            'no': {
+                color: '#000FFF',
+                name: 'No'
+            },
+            'yes': {
+                color: '#FFF000',
+                name: 'Yes'
+            }
+        }
+    },
+    pstatus: {
+        dataKey: 'pstatus',
+        keys: {
+            't': {
+                color: '#ff7e43',
+                name: 'Living together'
+            },
+            'a': {
+                color: '#5ebbd9',
+                name: 'Living apart'
+            }
+        }
+    },
+    sex: {
+        dataKey: 'sex',
+        keys: {
+            'f': {
+                color: '#ff7e43',
+                name: 'Female'
+            },
+            'm': {
+                color: '#5ebbd9',
+                name: 'Male'
+            }
+        }
+    },
+    address: {
+        dataKey: 'address',
+        keys: {
+            'r': {
+                color: '#3fb76f',
+                name: 'Rural'
+            },
+            'u': {
+                color: '#b386be',
+                name: 'Urban'
+            }
+        }
+    }
 }

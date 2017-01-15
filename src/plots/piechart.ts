@@ -1,5 +1,5 @@
+import $  = require('jquery');
 import d3 = require('d3');
-import $ = require('jquery');
 
 export class PieChart {
     public svg;
@@ -32,12 +32,22 @@ export class PieChart {
     }
 
     public update(newData): void {
-        const globalData = newData || this.data;
+        const self = this;
+        const radius = Math.min(this.options.width, this.options.height) / 2;
         const dataKey = this.options.dataKey;
+        const globalData = newData || this.data;
 
-        const tempData = {};
         const pieData = [];
+        const tempData = {};
         const colorArray = [];
+
+        const arcTween = function (d, index) {
+            var i = d3.interpolate(this._current, d);
+
+            this._current = i(0);
+
+            return t => arc(i(t), index);
+        }
 
         // split values from dattaKey
         for (let item in globalData) {
@@ -66,16 +76,6 @@ export class PieChart {
                 label,
                 count
             });
-        }
-
-        const radius = Math.min(this.options.width, this.options.height) / 2;
-
-        const arcTween = function (d, index) {
-            var i = d3.interpolate(this._current, d);
-
-            this._current = i(0);
-
-            return t => arc(i(t), index);
         }
 
         const color = d3.scaleOrdinal(d3.schemeCategory20b)
@@ -123,9 +123,6 @@ export class PieChart {
             .attr("y", 250)
             .attr("height", 100)
             .attr("width", 100);
-
-
-        const self = this;
 
         legend.selectAll('g').data(pieData)
             .enter()

@@ -1,84 +1,25 @@
-import $ = require('jquery');
+import $  = require('jquery');
 import d3 = require('d3');
 import '../../vendor/js/foundation.js';
 
-import { jsonData } from '../data/options';
+import { jsonData, pieCharts } from '../data/options';
 import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
 import { ChartManager } from './ChartManager';
 
-const pieCharts = {
-    romantic: {
-        dataKey: 'romantic',
-        keys: {
-            'no': {
-                color: '#000FFF',
-                name: 'No'
-            },
-            'yes': {
-                color: '#FFF000',
-                name: 'Yes'
-            }
-        }
-    },
-    pstatus: {
-        dataKey: 'pstatus',
-        keys: {
-            't': {
-                color: '#ff7e43',
-                name: 'Living together'
-            },
-            'a': {
-                color: '#5ebbd9',
-                name: 'Living apart'
-            }
-        }
-    },
-    sex: {
-        dataKey: 'sex',
-        keys: {
-            'f': {
-                color: '#ff7e43',
-                name: 'Female'
-            },
-            'm': {
-                color: '#5ebbd9',
-                name: 'Male'
-            }
-        }
-    },
-    address: {
-        dataKey: 'address',
-        keys: {
-            'r': {
-                color: '#3fb76f',
-                name: 'Rural'
-            },
-            'u': {
-                color: '#b386be',
-                name: 'Urban'
-            }
-        }
-    }
-};
-
-const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
+const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
     const manager = new ChartManager('assets/data/students.csv');
 
-    /* Shows the chart summary page */
+    let counter = 1;
+
+    // Shows the chart summary page
     $('.board--choices').fadeOut({
         duration: 300,
         done: () => $('.summary').fadeIn(300)
     });
 
-    /* Generates the selector classes for the piecharts */
-    let counter = 1;
-    for (let pieObj of pieChartObj) {
-        pieObj.selector = "#piechart" + counter;
-        counter += 1;
-    }
-
     manager.render((err, data) => {
+        const pieCharts = [];
         const barchart = new BarChart({
             selector: '#main-barchart',
             interactive: true,
@@ -90,12 +31,16 @@ const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
             }
         });
 
-        const pieCharts = [];
+        // store every piechart into an array
+        pieChartArray.forEach((value, index) => {
+            value.selector = "#piechart" + (index + 1);
 
-        for (let d of pieChartObj) {
-            pieCharts.push(new PieChart(data.data, d));
-        }
+            pieCharts.push(new PieChart(data.data, value));
+        });
 
+          // ================ //
+         // == add charts == //
+        // ================ //
         manager.addPieChart(...pieCharts);
         manager.addBarChart(new BarChart({
             selector: '.barchart1',
@@ -111,19 +56,27 @@ const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
             }
         }));
 
+          // ============ //
+         // == update == //
+        // ============ //
         barchart.update();
-
         manager.updateCharts();
     });
 };
 
-/* Loads the options from the json file and inserts it in the start page */
+showCharts({
+    key: 'pstatus'
+}, {
+    key: 'goout'
+}, [ pieCharts.romantic, pieCharts.sex, pieCharts.address ]);
+
+// Loads the options from the json file and inserts it in the start page
 const loadOptions = (cb = function(jsonData) {}): void => {
     const typeObj: Object = {};
 
     let counter: number = 1;
 
-    /* Seperates the data in the different types */
+    // Seperates the data in the different types
     for (let key in jsonData){
         if (!typeObj[jsonData[key].type]) {
             typeObj[jsonData[key].type] = {}
@@ -132,7 +85,7 @@ const loadOptions = (cb = function(jsonData) {}): void => {
         typeObj[jsonData[key].type][key] = jsonData[key].name
     }
 
-    /* Inserts the different keys into the option fields */
+    // Inserts the different keys into the option fields
     for (let optionsKey in typeObj){
         for (let key in typeObj[optionsKey]){
             $(`#selection-${ counter }`)
@@ -145,9 +98,9 @@ const loadOptions = (cb = function(jsonData) {}): void => {
     cb(jsonData);
 };
 
-/* Adds functionality to the buttons so that the user can set his choices */
+// Adds functionality to the buttons so that the user can set his choices
 const setChoices = (): void => {
-    /* Enables the button if both choices are selected */
+    // Enables the button if both choices are selected
     $('.choice--custom select').change(function(){
         let selectionNum = $('#selection-1').val();
         let selectionBin = $('#selection-2').val();
@@ -158,7 +111,7 @@ const setChoices = (): void => {
         }
     });
 
-    /* Predefined choice 1: alcohol consumption and sex */
+    // Predefined choice 1: alcohol consumption and sex
     $('#choice-1').click(function(){
         showCharts({
             key: 'sex',
@@ -177,7 +130,7 @@ const setChoices = (): void => {
         }, [ pieCharts.romantic, pieCharts.pstatus, pieCharts.address ]);
     });
 
-    /* Predefined choice 2: going out & parents cohabitation status */
+    // Predefined choice 2: going out & parents cohabitation status
     $('#choice-2').click(function(){
         showCharts({
             key: 'pstatus'
@@ -186,7 +139,7 @@ const setChoices = (): void => {
         }, [ pieCharts.romantic, pieCharts.sex, pieCharts.address ]);
     });
 
-    /* Custom choice: Ability to have custom choices */
+    // Custom choice: Ability to have custom choices
     // @todo check if one of the objects is selected
     $('#choice-3, .choice--custom').click(() => {
         let selectionNum = $('#selection-1').val();
@@ -203,8 +156,7 @@ const setChoices = (): void => {
 };
 
 function showChoices(){
-    /* Shows the summary page */
-
+    // Shows the summary page
     $('.backBtn').click(function(){
         $('.summary').fadeOut({
             duration: 300,
