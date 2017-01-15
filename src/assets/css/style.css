@@ -137,3 +137,16 @@ h3 {
     cursor: pointer;
     opacity: .8;
 }
+
+small {
+    color: #999;
+    font-size: 1em;
+}
+
+.info {
+    margin-top: 3em;
+}
+
+.info a {
+    color: #666;
+}
