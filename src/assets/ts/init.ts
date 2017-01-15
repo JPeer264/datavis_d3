@@ -42,7 +42,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
         // ================ //
         manager.addPieChart(...pieCharts);
         manager.addBarChart(new BarChart({
-            selector: '.barchart1',
+            selector: '#barchart1',
             manager,
             data,
             stacked: {
@@ -127,7 +127,7 @@ const showChoices = () => {
             duration: 300,
             done: () => {
                 $('.board--choices').fadeIn(300);
-                $('#barchart, .piechart').empty();
+                $('.barchart, .piechart').empty();
                 $('.choice--custom form')[0].reset();
             }
         });
