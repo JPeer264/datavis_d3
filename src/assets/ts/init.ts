@@ -65,22 +65,22 @@ const pieCharts = {
 const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
     const manager = new ChartManager('assets/data/students.csv');
 
-    /* Shows the summary page */
+    /* Shows the chart summary page */
     $('.board--choices').fadeOut({
-        duration: 0,
+        duration: 300,
         done: () => $('.summary').fadeIn(300)
     });
 
     /* Generates the selector classes for the piecharts */
     let counter = 1;
     for (let pieObj of pieChartObj) {
-        pieObj.selector = ".piechart" + counter;
+        pieObj.selector = "#piechart" + counter;
         counter += 1;
     }
 
     manager.render((err, data) => {
         const barchart = new BarChart({
-            selector: '.main-barchart',
+            selector: '#main-barchart',
             interactive: true,
             manager,
             data,
@@ -202,5 +202,21 @@ const setChoices = (): void => {
     });
 };
 
+function showChoices(){
+    /* Shows the summary page */
+
+    $('.backBtn').click(function(){
+        $('.summary').fadeOut({
+            duration: 300,
+            done: () => {
+                $('.board--choices').fadeIn(300);
+                $('#barchart, .piechart').empty();
+                $('.choice--custom form')[0].reset();
+            }
+        });
+    });
+}
+
 loadOptions();
 setChoices();
+showChoices();

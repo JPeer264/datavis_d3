@@ -1,4 +1,5 @@
 import d3 = require('d3');
+import $ = require('jquery');
 
 export class PieChart {
     public svg;
@@ -11,6 +12,8 @@ export class PieChart {
         options.width = 360;
         options.height = 360;
 
+        this.addHeader("h3");
+
         this.svg = d3.select(this.options.selector)
             .append('div')
             .classed('svg-container', true)
@@ -21,6 +24,11 @@ export class PieChart {
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
+    }
+
+    // @todo Get name of the heading
+    public addHeader(tag:string, headerText: string = 'HEADER'): void {
+        $(this.options.selector).append(`<${tag}>${headerText}</${tag}>`);
     }
 
     public update(newData): void {
@@ -108,7 +116,7 @@ export class PieChart {
 
         // Adds the legend
         // @todo Add the full name of the key
-        // @todo Change the color of the labels
+        // @todo Make sure the legend only renders once
         let legend = this.svg.append("g")
             .attr("class", "legend")
             .attr("x", 400)
@@ -116,24 +124,31 @@ export class PieChart {
             .attr("height", 100)
             .attr("width", 100);
 
+
+        const self = this;
+
         legend.selectAll('g').data(pieData)
             .enter()
             .append('g')
             .each(function(d, i) {
                 let g = d3.select(this);
+
+                const key = Object.keys(self.options.keys)[i];
+                let fillColor = self.options.keys[key].color;
+
                 g.append("rect")
                     .attr("x", 0)
                     .attr("y", 230 + i*40)
                     .attr("width", 30)
                     .attr("height", 30)
-                    .style("fill", '#000000');
+                    .style("fill", fillColor);
 
                 g.append("text")
                     .attr("x", 44)
                     .attr("y", 242 + i*40 + 9)
                     .attr("height",30)
                     .attr("width",100)
-                    .style("fill", '#000000')
+                    .style("fill", fillColor)
                     .text(pieData[i]['label'])
                     .attr("font-size", "18pt");
             });

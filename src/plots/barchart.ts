@@ -16,6 +16,8 @@ export class BarChart {
         options.selector = options.selector || 'body',
         options.className = options.className || 'chart',
 
+        this.addHeader("h1");
+
         this.svg = d3.select(options.selector)
           .append('div')
             .classed('svg-container', true)
@@ -33,7 +35,6 @@ export class BarChart {
 
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
-
     }
 
     public prepareStackedData(stackedObj, xObj, data = this.options.data.data) {
@@ -122,8 +123,9 @@ export class BarChart {
         return result;
     }
 
+    // @todo Get name of the heading
     public addHeader(tag:string, headerText: string = 'HEADER'): void {
-        $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
+        $(this.options.selector).append(`<${tag}>${headerText}</${tag}>`);
     }
 
     public update(data = undefined): void {
@@ -142,6 +144,8 @@ export class BarChart {
             .range(stackedData.data.colors);
         let width = this._width;
         let height = this._height;
+
+        console.log(data);
 
         // Scale the range of the data in the domains
         // @todo get right z.domain
