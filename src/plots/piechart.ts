@@ -15,7 +15,7 @@ export class PieChart {
         options.height = 360;
         options.selector = options.selector || 'body';
 
-        this.addHeader("h3", this.options.name);
+        this.addHeader('h3', this.options.name);
 
         this.svg = d3.select(this.options.selector)
             .append('div')
@@ -28,12 +28,12 @@ export class PieChart {
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
 
-        this.legend = this.svg.append("g")
-            .attr("class", "legend")
-            .attr("x", 0)
-            .attr("y", 250)
-            .attr("height", 100)
-            .attr("width", 100);
+        this.legend = this.svg.append('g')
+            .attr('class', 'legend')
+            .attr('x', 0)
+            .attr('y', 250)
+            .attr('height', 100)
+            .attr('width', 100);
     }
 
     // @todo Get name of the heading
@@ -102,7 +102,12 @@ export class PieChart {
             .append('path')
             .attr('class', 'enter')
             .attr('d', arc)
-            .attr('fill', d => color(d.data.label))
+            .attr('fill', d => chartOptions[d.data.label].color)
+            .transition()
+            .duration(750)
+            .attrTween('d', arcTween);
+
+        path.attr('class', 'update')
             .transition()
             .duration(750)
             .attrTween('d', arcTween);
@@ -114,11 +119,6 @@ export class PieChart {
             .attrTween('d', arcTween)
             .remove();
 
-        path.attr('class', 'update')
-            .transition()
-            .duration(750)
-            .attrTween('d', arcTween);
-
         // Adds the legend
         // @todo Add the full name of the key
         this.legend.selectAll('g').data(pieData)
@@ -126,25 +126,24 @@ export class PieChart {
             .append('g')
             .each(function (d, i) {
                 let g = d3.select(this);
-                let fillColor = colorArray[i];
                 let label = pieData[i]['label'];
                 let name = chartOptions[label].name;
 
-                g.append("rect")
-                    .attr("x", -100)
-                    .attr("y", 210 + i*50)
-                    .attr("width", 34)
-                    .attr("height", 34)
-                    .style("fill", fillColor);
+                g.append('rect')
+                    .attr('x', - 100)
+                    .attr('y', 210 + i * 50)
+                    .attr('width', 34)
+                    .attr('height', 34)
+                    .style('fill', d => chartOptions[d.label].color);
 
-                g.append("text")
-                    .attr("x", -50)
-                    .attr("y", 240 + i*50)
-                    .attr("height",30)
-                    .attr("width",100)
-                    .style("fill", fillColor)
+                g.append('text')
+                    .attr('x', - 50)
+                    .attr('y', 240 + i * 50)
+                    .attr('height', 30)
+                    .attr('width', 100)
+                    .style('fill', d => chartOptions[d.label].color)
                     .text(name)
-                        .attr("font-size", "24pt");
+                        .attr('font-size', '24pt');
             });
     }
 }
