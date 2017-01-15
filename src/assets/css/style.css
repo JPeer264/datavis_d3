@@ -131,11 +131,11 @@ h3 {
     display: none;
 }
 
-.rect {
+.rect, .path {
     transition: .1s opacity;
 }
 
-.rect:hover {
+.rect:hover, .path:hover {
     cursor: pointer;
     opacity: .8;
 }

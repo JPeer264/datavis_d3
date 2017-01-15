@@ -116,6 +116,7 @@ export class PieChart {
                 self.tooltip.html(text)
             })
             .attr('class', 'enter')
+            .attr('class', 'path')
             .attr('d', arc)
             .attr('fill', d => chartOptions[d.data.label].color)
             .transition()
