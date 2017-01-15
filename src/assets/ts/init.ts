@@ -2,6 +2,7 @@ import $ = require('jquery');
 import d3 = require('d3');
 import '../../vendor/js/foundation.js';
 
+import { jsonData } from '../data/options';
 import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
 import { ChartManager } from './ChartManager';
@@ -117,33 +118,31 @@ const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
 };
 
 /* Loads the options from the json file and inserts it in the start page */
-const loadOptions = (cb = function(result) {}): void => {
-    $.getJSON('assets/data/options.json', result => {
-        const typeObj: Object = {};
+const loadOptions = (cb = function(jsonData) {}): void => {
+    const typeObj: Object = {};
 
-        let counter: number = 1;
+    let counter: number = 1;
 
-        /* Seperates the data in the different types */
-        for (let key in result){
-            if (!typeObj[result[key].type]) {
-                typeObj[result[key].type] = {}
-            }
-
-            typeObj[result[key].type][key] = result[key].name
+    /* Seperates the data in the different types */
+    for (let key in jsonData){
+        if (!typeObj[jsonData[key].type]) {
+            typeObj[jsonData[key].type] = {}
         }
 
-        /* Inserts the different keys into the option fields */
-        for (let optionsKey in typeObj){
-            for (let key in typeObj[optionsKey]){
-                $(`#selection-${ counter }`)
-                    .append(`<option value="${key}">${typeObj[optionsKey][key]}</option>`);
-            }
+        typeObj[jsonData[key].type][key] = jsonData[key].name
+    }
 
-            counter += 1;
+    /* Inserts the different keys into the option fields */
+    for (let optionsKey in typeObj){
+        for (let key in typeObj[optionsKey]){
+            $(`#selection-${ counter }`)
+                .append(`<option value="${key}">${typeObj[optionsKey][key]}</option>`);
         }
 
-        cb(result);
-    });
+        counter += 1;
+    }
+
+    cb(jsonData);
 };
 
 /* Adds functionality to the buttons so that the user can set his choices */
