@@ -1,50 +1,50 @@
 export const chartOptions = {
     gp: {
-        color: '#f10',
+        color: '#a50026',
         name: 'Gabriel Pereira'
     },
     ms: {
-        color: '#f4f',
+        color: '#d73027',
         name: 'Mousinho da Silveira'
     },
     le3: {
-        color: '#f1a',
+        color: '#f46d43',
         name: 'Less or equal 3'
     },
     gt3: {
-        color: '#f40',
+        color: '#fdae61',
         name: 'Greater than 3'
     },
     f: {
-        color: '#ff7e43',
+        color: '#d73027',
         name: 'Female'
     },
     m: {
-        color: '#5ebbd9',
+        color: '#f46d43',
         name: 'Male'
     },
     no: {
-        color: '#0F0',
+        color: '#abd9e9',
         name: 'No'
     },
     yes: {
-        color: '#FFF',
+        color: '#74add1',
         name: 'Yes'
     },
     t: {
-        color: '#000',
+        color: '#4575b4',
         name: 'Living Together'
     },
     a: {
-        color: '#FFF',
+        color: '#313695',
         name: 'Living Apart'
     },
     u: {
-        color: '#FFF',
+        color: '#f46d43',
         name: 'Urban'
     },
     r: {
-        color: '#F6F',
+        color: '#fdae61',
         name: 'Rural'
     }
 };

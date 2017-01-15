@@ -56,6 +56,27 @@ export class BarChart {
             .call(d3.axisBottom(x)
                 .ticks(5))
                 .attr('font-size', '18pt');
+
+        this.svg.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(this.y))
+            .attr("transform", "translate(20," + 0 + ")")
+/*            .append("text")
+            .attr("x", 2)
+            .attr("y", this.y(this.y.ticks().pop()) + 0.5)
+            .attr("dy", "0.32em")
+            .attr("fill", "#000")
+            .attr("font-weight", "bold")
+            .attr("text-anchor", "start")
+            .text("Population");*/
+
+        // Adds the labels for the y axis
+/*        this.svg.append("g")
+            .attr("transform", "translate(0," + 0 + ")")
+            .attr("class", "axis")
+            .call(d3.axisLeft(this.y)
+                .ticks(5))
+            .attr('font-size', '18pt');*/
     }
 
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
@@ -208,7 +229,7 @@ export class BarChart {
         const rectsEntered = rects.enter()
             .append('rect')
             .attr('class', (d, i) => {
-                return `interactive-rect-${Object.keys(d.data.filterData).join('-')}`
+                return `rect interactive-rect-${Object.keys(d.data.filterData).join('-')}`
             })
             .attr('x', (d, i) => x(i + 1))
             .attr('y', d => y(d[1]))

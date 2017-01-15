@@ -44,7 +44,7 @@ h1 {
 }
 
 h3 {
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 .board--choices{
@@ -127,4 +127,13 @@ h3 {
 
 .hidden {
     display: none;
+}
+
+.rect {
+    transition: .1s opacity;
+}
+
+.rect:hover {
+    cursor: pointer;
+    opacity: .8;
 }
