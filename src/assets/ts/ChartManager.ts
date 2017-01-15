@@ -2,8 +2,7 @@ import d3 = require('d3');
 
 export class ChartManager {
     public data: Array<Object>;
-    public pieData: Array<Object>;
-    public barData: Array<Object>;
+    public filteredData: Array<Object>;
     public pieCharts: Array<any> = [];
     public barCharts: Array<any> = [];
 
@@ -12,18 +11,7 @@ export class ChartManager {
 
     render(cb: Function) {
         d3.csv(this.csvFile, (err, data) => {
-            let barinfo = {
-                data: []
-            };
-
-            for (let person of data) {
-                barinfo.data.push({
-                    x: person.famrel,
-                    y: person.goout
-                });
-           }
-
-           this.data = this.pieData = data;
+           this.data = this.filteredData = data;
 
            cb(err, {
                data
@@ -34,12 +22,12 @@ export class ChartManager {
     updateCharts() {
         // update piecharts
         for (let pieChart of this.pieCharts) {
-            pieChart.update(this.pieData);
+            pieChart.update(this.filteredData);
         }
 
         // update piecharts
         for (let barChart of this.barCharts) {
-            barChart.update(this.data);
+            barChart.update(this.filteredData);
         }
     }
 
@@ -52,8 +40,11 @@ export class ChartManager {
     }
 
     filterData(filterObject) {
-        const newData = [];
+        const sortedPieData = [];
 
+        console.log(filterObject)
+
+        // sort pieData
         for (let item of this.data) {
             let acceptArray = [];
 
@@ -64,14 +55,14 @@ export class ChartManager {
             }
 
             if (acceptArray.length === Object.keys(filterObject).length) {
-                newData.push(item);
+                sortedPieData.push(item);
             }
         }
 
-        this.pieData = newData;
+        this.filteredData = sortedPieData;
     }
 
     releaseFilter() {
-        this.pieData = this.data;
+        this.filteredData = this.data;
     }
 }

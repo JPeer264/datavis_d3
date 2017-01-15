@@ -36,8 +36,7 @@ export class BarChart {
 
     }
 
-    public prepareStackedData(stackedObj, xObj) {
-        const data = this.options.data.data;
+    public prepareStackedData(stackedObj, xObj, data = this.options.data.data) {
         const result: any = [];
         const colors: Array<String> = [];
         const chooser = xObj.key;
@@ -62,6 +61,13 @@ export class BarChart {
             let counter = 0;
             let appendArray = [];
             let startPoint = 0;
+
+            // hardcoded... fill up missing keys
+            seperatedData[sKey][1] = seperatedData[sKey][1] || 0;
+            seperatedData[sKey][2] = seperatedData[sKey][2] || 0;
+            seperatedData[sKey][3] = seperatedData[sKey][3] || 0;
+            seperatedData[sKey][4] = seperatedData[sKey][4] || 0;
+            seperatedData[sKey][5] = seperatedData[sKey][5] || 0;
 
             // set color for z.domain
             if (stackedObj.options && stackedObj.options[sKey].color) {
@@ -120,8 +126,9 @@ export class BarChart {
         $(`<${tag}>${headerText}</${tag}>`).insertBefore($(this.options.selector));
     }
 
-    public update(stackedObj, xObj): void {
-        const data = this.prepareStackedData(stackedObj, xObj);
+    public update(data = undefined): void {
+        const self = this;
+        const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
         const isTooltip = false;
         const manager = this.options.manager;
         const stack = d3.stack();
@@ -132,20 +139,19 @@ export class BarChart {
         let x = this.x;
         let y = this.y;
         let z = d3.scaleOrdinal()
-            .range(data.data.colors);
+            .range(stackedData.data.colors);
         let width = this._width;
         let height = this._height;
 
         // Scale the range of the data in the domains
         // @todo get right z.domain
-        x.domain(data.data.xRange);
-        y.domain([0, d3.max(data[data.length - 1], d => d[1])]);
-        z.domain(['sex']);
+        x.domain(stackedData.data.xRange);
+        y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
         // https://bl.ocks.org/mbostock/3808234
         let barchart = this.svg.append("g")
             .selectAll("g")
-            .data(data)
+            .data(stackedData)
             .enter().append("g")
               .attr("fill", d => z(d.key))
             .selectAll("rect")
@@ -160,7 +166,7 @@ export class BarChart {
             .attr("height", 100)
             .attr("width", 100);
 
-        legend.selectAll('g').data(data)
+        legend.selectAll('g').data(stackedData)
             .enter()
             .append('g')
             .each(function(d, i) {
@@ -170,15 +176,15 @@ export class BarChart {
                     .attr("y", 10 + i*40)
                     .attr("width", 30)
                     .attr("height", 30)
-                    .style("fill", data.data.colors[i]);
+                    .style("fill", stackedData.data.colors[i]);
 
                 g.append("text")
                     .attr("x", width - 130)
                     .attr("y", 24 + i*40 + 9)
                     .attr("height",30)
                     .attr("width",100)
-                    .style("fill", data.data.colors[i])
-                    .text(data[i]['key'])
+                    .style("fill", stackedData.data.colors[i])
+                    .text(stackedData[i]['key'])
                         .attr("font-size", "18pt");
             });
 
@@ -221,32 +227,25 @@ export class BarChart {
             })
             .on('click', function (d, i) {
                 const $this = $(this);
-                if ($this.hasClass('rect-active')) {
-                    $('.interactive-rect').removeClass('low-alpha rect-active');
 
-                    manager.releaseFilter();
+                if (self.options.interactive) {
+                    if ($this.hasClass('rect-active')) {
+                        $('.interactive-rect').removeClass('low-alpha rect-active');
+
+                        manager.releaseFilter();
+                        manager.updateCharts();
+                        return;
+                    }
+
+                    manager.filterData(d.data.filterData);
+
                     manager.updateCharts();
-                    return;
+
+                    $('.interactive-rect').removeClass('low-alpha rect-active');
+                    $('.interactive-rect').addClass('low-alpha');
+                    $this.removeClass('low-alpha');
+                    $this.addClass('rect-active');
                 }
-
-                manager.filterData(d.data.filterData);
-
-                manager.updateCharts();
-
-                $('.interactive-rect').removeClass('low-alpha rect-active');
-                $('.interactive-rect').addClass('low-alpha');
-                $this.removeClass('low-alpha');
-                $this.addClass('rect-active');
             });
-
-        // // add the x Axis
-        // barchart.append('g')
-        //     .attr('transform', 'translate(0,' + height + ')')
-        //     .call(d3.axisBottom(x));
-
-        // // add the y Axis
-        // barchart.append('g')
-        //     .call(d3.axisLeft(y));
     }
-
 }

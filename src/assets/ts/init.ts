@@ -6,9 +6,63 @@ import { BarChart } from '../../plots/barchart';
 import { PieChart } from '../../plots/piechart';
 import { ChartManager } from './ChartManager';
 
-const manager = new ChartManager('assets/data/students.csv');
+const pieCharts = {
+    romantic: {
+        dataKey: 'romantic',
+        keys: {
+            'no': {
+                color: '#000FFF',
+                name: 'No'
+            },
+            'yes': {
+                color: '#FFF000',
+                name: 'Yes'
+            }
+        }
+    },
+    pstatus: {
+        dataKey: 'pstatus',
+        keys: {
+            't': {
+                color: '#ff7e43',
+                name: 'Living together'
+            },
+            'a': {
+                color: '#5ebbd9',
+                name: 'Living apart'
+            }
+        }
+    },
+    sex: {
+        dataKey: 'sex',
+        keys: {
+            'f': {
+                color: '#ff7e43',
+                name: 'Female'
+            },
+            'm': {
+                color: '#5ebbd9',
+                name: 'Male'
+            }
+        }
+    },
+    address: {
+        dataKey: 'address',
+        keys: {
+            'r': {
+                color: '#3fb76f',
+                name: 'Rural'
+            },
+            'u': {
+                color: '#b386be',
+                name: 'Urban'
+            }
+        }
+    }
+};
 
-const showCharts = (stackedObj, xObj, pieChartObj): void => {
+const showCharts = (stackedLabel, stackedX, pieChartObj): void => {
+    const manager = new ChartManager('assets/data/students.csv');
 
     /* Shows the summary page */
     $('.board--choices').fadeOut({
@@ -20,18 +74,20 @@ const showCharts = (stackedObj, xObj, pieChartObj): void => {
     let counter = 1;
     for (let pieObj of pieChartObj) {
         pieObj.selector = ".piechart" + counter;
-        console.log(pieObj);
         counter += 1;
     }
 
     manager.render((err, data) => {
         const barchart = new BarChart({
-            selector: '.barchart',
+            selector: '.main-barchart',
+            interactive: true,
             manager,
-            data
+            data,
+            stacked: {
+                label: stackedLabel,
+                x: stackedX
+            }
         });
-
-        console.log(stackedObj.key);
 
         const pieCharts = [];
 
@@ -40,7 +96,21 @@ const showCharts = (stackedObj, xObj, pieChartObj): void => {
         }
 
         manager.addPieChart(...pieCharts);
-        barchart.update(stackedObj, xObj);
+        manager.addBarChart(new BarChart({
+            selector: '.barchart1',
+            manager,
+            data,
+            stacked: {
+                label: {
+                    key: 'pstatus'
+                },
+                x: {
+                    key: 'goout'
+                }
+            }
+        }));
+
+        barchart.update();
 
         manager.updateCharts();
     });
@@ -76,7 +146,6 @@ const loadOptions = (cb = function(result) {}): void => {
     });
 };
 
-
 /* Adds functionality to the buttons so that the user can set his choices */
 const setChoices = (): void => {
     /* Enables the button if both choices are selected */
@@ -89,62 +158,6 @@ const setChoices = (): void => {
             $('.choice--custom').addClass('enabled');
         }
     });
-
-    let romanticPieObj = {
-        dataKey: 'romantic',
-        keys: {
-            'no': {
-                color: '#000FFF',
-                name: 'No'
-            },
-            'yes': {
-                color: '#FFF000',
-                name: 'Yes'
-            }
-        }
-    };
-
-    let pstatusPieObj = {
-        dataKey: 'pstatus',
-        keys: {
-            't': {
-                color: '#ff7e43',
-                name: 'Living together'
-            },
-            'a': {
-                color: '#5ebbd9',
-                name: 'Living apart'
-            }
-        }
-    };
-
-    let sexPieObj = {
-        dataKey: 'sex',
-        keys: {
-            'f': {
-                color: '#ff7e43',
-                name: 'Female'
-            },
-            'm': {
-                color: '#5ebbd9',
-                name: 'Male'
-            }
-        }
-    };
-
-    let addressPieObj = {
-        dataKey: 'address',
-        keys: {
-            'r': {
-                color: '#3fb76f',
-                name: 'Rural'
-            },
-            'u': {
-                color: '#b386be',
-                name: 'Urban'
-            }
-        }
-    };
 
     /* Predefined choice 1: alcohol consumption and sex */
     $('#choice-1').click(function(){
@@ -162,7 +175,7 @@ const setChoices = (): void => {
             }
         }, {
             key: 'walc'
-        }, [romanticPieObj, pstatusPieObj, addressPieObj]);
+        }, [ pieCharts.romantic, pieCharts.pstatus, pieCharts.address ]);
     });
 
     /* Predefined choice 2: going out & parents cohabitation status */
@@ -171,7 +184,7 @@ const setChoices = (): void => {
             key: 'pstatus'
         }, {
             key: 'goout'
-        }, [romanticPieObj, sexPieObj, addressPieObj]);
+        }, [ pieCharts.romantic, pieCharts.sex, pieCharts.address ]);
     });
 
     /* Custom choice: Ability to have custom choices */
@@ -185,7 +198,7 @@ const setChoices = (): void => {
                 key: selectionBin
             }, {
                 key: selectionNum
-            }, [romanticPieObj, pstatusPieObj, sexPieObj]);
+            }, [ pieCharts.romantic, pieCharts.pstatus, pieCharts.sex ]);
         }
     });
 };

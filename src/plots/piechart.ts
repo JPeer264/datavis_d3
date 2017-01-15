@@ -116,8 +116,6 @@ export class PieChart {
             .attr("height", 100)
             .attr("width", 100);
 
-        console.log('fill', d => color(d.data.label));
-
         legend.selectAll('g').data(pieData)
             .enter()
             .append('g')
