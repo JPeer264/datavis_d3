@@ -2,14 +2,13 @@ import d3 = require('d3');
 
 export class ChartManager {
     public data: Array<Object>;
-    public filteredData: Array<Object>;
     public pieCharts: Array<any> = [];
     public barCharts: Array<any> = [];
+    public filteredData: Array<Object>;
 
-    constructor(private csvFile: String) {
-    }
+    constructor(private csvFile: String) {}
 
-    render(cb: Function) {
+    render(cb: Function): void {
         d3.csv(this.csvFile, (err, data) => {
            this.data = this.filteredData = data;
 
@@ -19,7 +18,7 @@ export class ChartManager {
         });
     }
 
-    updateCharts() {
+    updateCharts(): void {
         // update piecharts
         for (let pieChart of this.pieCharts) {
             pieChart.update(this.filteredData);
@@ -31,16 +30,16 @@ export class ChartManager {
         }
     }
 
-    addPieChart(...charts) {
+    addPieChart(...charts): void {
         this.pieCharts = this.pieCharts.concat(charts)
     }
 
-    addBarChart(...charts) {
+    addBarChart(...charts): void {
         this.barCharts = this.barCharts.concat(charts)
     }
 
-    filterData(filterObject) {
-        const sortedData = [];
+    filterData(filterObject): void {
+        const sortedData: Array<Object> = [];
 
         // sort pieData
         for (let item of this.data) {
@@ -60,7 +59,7 @@ export class ChartManager {
         this.filteredData = sortedData;
     }
 
-    releaseFilter() {
+    releaseFilter(): void {
         this.filteredData = this.data;
     }
 }
