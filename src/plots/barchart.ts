@@ -27,7 +27,7 @@ export class BarChart {
             .classed('svg-container--barchart', true)
            .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1000 500')
+            .attr('viewBox', '0 0 1000 550')
             .classed('svg-content-responsive', true)
            .append('g');
             // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
@@ -45,6 +45,17 @@ export class BarChart {
             .attr('y', 25)
             .attr('height', 100)
             .attr('width', 100);
+
+        let x = d3.scaleLinear()
+            .domain([1, 5])
+            .range([100, this._width - 100]);
+
+        this.svg.append("g")
+            .attr("transform", "translate(0," + (this._height + 10) + ")")
+            .attr("class", "axis")
+            .call(d3.axisBottom(x)
+                .ticks(5))
+                .attr('font-size', '18pt');
     }
 
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {

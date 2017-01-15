@@ -25,8 +25,8 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
             manager,
             data,
             stacked: {
-                label: stackedLabel,
-                x: stackedX
+                x: stackedX,
+                label: stackedLabel
             }
         });
 
@@ -46,8 +46,8 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
             manager,
             data,
             stacked: {
-                label: jsonData.pstatus,
-                x: jsonData.goout
+                x: jsonData.goout,
+                label: jsonData.pstatus
             }
         }));
 
