@@ -8,7 +8,7 @@
 }
 
 .svg-container--barchart {
-    padding-bottom: 60%;
+    padding-bottom: 50%;
 }
 
 .svg-content-responsive {
@@ -50,10 +50,7 @@ h1 {
 }
 
 h2 {
-    padding: .2em;
-    border: 2px solid #ccc;
-    margin-bottom: 1em;
-    border-radius: 5px;
+
 }
 
 h3 {
@@ -112,8 +109,8 @@ h3 {
     color: #5ebbd9;
 }
 
-.summary {
-    margin-top: 1em;
+.main-chart-wrapper {
+    background: rgba(255,255,255,.5);
 }
 
 .backBtn {
@@ -123,12 +120,22 @@ h3 {
     float: left;
     background: #eee;
     transition: all .2s;
+    border-radius: 5px;
 }
 
 .backBtn:hover {
     border: 2px solid #444;
     color: #444;
     cursor: pointer;
+}
+
+.detailed-information {
+    margin-bottom: 2em;
+    border-radius: 5px;
+}
+
+.detailed-information p {
+    font-size: 1.1em;
 }
 
 .disabled {
@@ -174,8 +181,17 @@ small {
     color: #666;
 }
 
-.piechart {
+.background-1 {
     background: rgba(255,255,255,.5);
     border-radius: 5px;
     padding: 1em 0;
+}
+
+.row {
+    margin-bottom: 2em;
+}
+
+.tip {
+    margin: 2em 0;
+    text-align: center;
 }

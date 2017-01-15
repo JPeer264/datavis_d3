@@ -10,8 +10,8 @@ export class BarChart {
     public svg;
     public tooltip;
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
-    public _width:number  = 960; // - this.margin.left - this.margin.right;
-    public _height:number = 500; //- this.margin.top  - this.margin.bottom;
+    public _width:number  = 800; // - this.margin.left - this.margin.right;
+    public _height:number = 440; //- this.margin.top  - this.margin.bottom;
     public legend;
 
     constructor(private options) {
@@ -27,7 +27,7 @@ export class BarChart {
             .classed('svg-container--barchart', true)
            .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1000 550')
+            .attr('viewBox', '0 0 1050 550')
             .classed('svg-content-responsive', true)
            .append('g');
             // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
@@ -57,26 +57,10 @@ export class BarChart {
                 .ticks(5))
                 .attr('font-size', '18pt');
 
-        this.svg.append("g")
+/*        this.svg.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(this.y))
-            .attr("transform", "translate(20," + 0 + ")")
-/*            .append("text")
-            .attr("x", 2)
-            .attr("y", this.y(this.y.ticks().pop()) + 0.5)
-            .attr("dy", "0.32em")
-            .attr("fill", "#000")
-            .attr("font-weight", "bold")
-            .attr("text-anchor", "start")
-            .text("Population");*/
-
-        // Adds the labels for the y axis
-/*        this.svg.append("g")
-            .attr("transform", "translate(0," + 0 + ")")
-            .attr("class", "axis")
-            .call(d3.axisLeft(this.y)
-                .ticks(5))
-            .attr('font-size', '18pt');*/
+            .attr("transform", "translate(20," + 0 + ")");*/
 
         this.tooltip = createTooltip();
     }
@@ -187,7 +171,6 @@ export class BarChart {
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
         // Adds the legend
-        // @todo Add the full name of the key
         this.legend.selectAll('g').data(stackedData)
             .enter()
             .append('g')
@@ -195,20 +178,20 @@ export class BarChart {
                 let g = d3.select(this);
 
                 g.append('rect')
-                    .attr('x', width - 170)
-                    .attr('y', 10 + i * 40)
-                    .attr('width', 30)
-                    .attr('height', 30)
+                    .attr('x', width + 20)
+                    .attr('y', (height/2 - 30) + i * 40)
+                    .attr('width', 24)
+                    .attr('height', 24)
                     .style('fill', d => chartOptions[d.key].color);
 
                 g.append('text')
-                    .attr('x', width - 130)
-                    .attr('y', 24 + i * 40 + 9)
+                    .attr('x', width + 54)
+                    .attr('y', (height/2 - 10) + i * 40)
                     .attr('height',30)
                     .attr('width',100)
-                    .style('fill', d => chartOptions[d.key].color)
+                    .style('fill', '#333')
                     .text(chartOptions[d.key].name)
-                        .attr('font-size', '18pt');
+                        .attr('font-size', '16pt');
             });
 
         const categories = this.svg.selectAll('.category')
@@ -244,7 +227,7 @@ export class BarChart {
             })
             .on('mousemove', d => {
                 const xPosition = d3.mouse($('body')[0])[0] - 20 - ($('.tooltip').width() / 2);
-                const yPosition = d3.mouse($('body')[0])[1] - 50 - $(window).scrollTop() - ($('.tooltip').height() / 2);
+                const yPosition = d3.mouse($('body')[0])[1] - 80 - $(window).scrollTop() - ($('.tooltip').height() / 2);
 
                 let text = '';
                 let amount = d[1] - d[0];
