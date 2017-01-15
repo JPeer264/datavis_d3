@@ -154,18 +154,18 @@ export class PieChart {
                 let name = chartOptions[label].name;
 
                 g.append('rect')
-                    .attr('x', - 100)
+                    .attr('x', -100)
                     .attr('y', 210 + i * 50)
                     .attr('width', 34)
                     .attr('height', 34)
                     .style('fill', d => chartOptions[d.label].color);
 
                 g.append('text')
-                    .attr('x', - 50)
-                    .attr('y', 240 + i * 50)
+                    .attr('x', -50)
+                    .attr('y', 239 + i * 50)
                     .attr('height', 30)
                     .attr('width', 100)
-                    .style('fill', d => chartOptions[d.label].color)
+                    .style('fill', '#333')
                     .text(name)
                         .attr('font-size', '24pt');
             });
