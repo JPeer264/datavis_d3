@@ -110,7 +110,6 @@ export class PieChart {
                 const yPosition = d3.mouse($('body')[0])[1] - 40 - $(window).scrollTop() - ($('.tooltip').height() / 2);
 
                 let text = `${chartOptions[d.data.label].name}: <b>${d.data.count} People</b>`;
-                console.log(d)
 
                 self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
                 self.tooltip.html(text)
