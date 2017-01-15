@@ -27,7 +27,7 @@ export class BarChart {
             .classed('svg-container--barchart', true)
            .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1000 800')
+            .attr('viewBox', '0 0 1000 500')
             .classed('svg-content-responsive', true)
            .append('g');
             // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
@@ -151,11 +151,6 @@ export class BarChart {
         x.domain(stackedData.data.xRange);
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
-        // https://bl.ocks.org/mbostock/3808234
-        let barchart = this.svg.append('g')
-            .selectAll('g')
-            .data(stackedData);
-
         // Adds the legend
         // @todo Add the full name of the key
         this.legend.selectAll('g').data(stackedData)
@@ -181,24 +176,22 @@ export class BarChart {
                         .attr('font-size', '18pt');
             });
 
-        // EXIT old elements not present in new data.
-        barchart.exit()
-            .attr('class', 'exit')
-            .remove();
+        const categories = this.svg.selectAll('.category')
+            .data(stackedData)
 
-        // UPDATE old elements present in new data.
-        barchart.attr('class', 'update')
-            .attr('x', (d, i) => x(i + 1))
-            .attr('width', x.bandwidth())
-            .transition(300)
-            .attr('y', d => y(d[1]))
-            .attr('height', d => y(d[0]) - y(d[1]));
+        const categoriesEntered = categories.enter()
+            .append('g')
+            .attr('class', 'category');
 
-        barchart.enter().append('g')
-            .attr('fill', d => z(d.key))
-            .selectAll('rect')
-            .data(d => d)
-            .enter()
+        const categoriesUpdated = categories.merge(categoriesEntered)
+            .attr('fill', d => z(d.key));
+
+        categories.exit().remove();
+
+        const rects = categoriesUpdated.selectAll('rect')
+            .data(d => d);
+
+        const rectsEntered = rects.enter()
             .append('rect')
             .attr('class', (d, i) => {
                 return `interactive-rect-${Object.keys(d.data.filterData).join('-')}`
@@ -248,5 +241,14 @@ export class BarChart {
                     $this.addClass('rect-active');
                 }
             });
+
+        const rectsUpdated = rects.merge(rectsEntered)
+            .attr('x', (d, i) => x(i + 1))
+            .attr('width', x.bandwidth())
+            .transition(300)
+            .attr('y', d => y(d[1]))
+            .attr('height', d => y(d[0]) - y(d[1]));
+
+        rects.exit().remove();
     }
 }
