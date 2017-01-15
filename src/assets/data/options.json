@@ -1,20 +1,4 @@
 {
-    "age": {
-        "name": "Students Age",
-        "type": "numeric"
-    },
-    "medu": {
-        "name": "Mothers Education",
-        "type": "numeric"
-    },
-    "fedu": {
-        "name": "Fathers Education",
-        "type": "numeric"
-    },
-    "reason": {
-        "name": "Reason for this School",
-        "type": "numeric"
-    },
     "traveltime": {
         "name": "Traveltime to School",
         "type": "numeric"
