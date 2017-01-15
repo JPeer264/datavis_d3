@@ -6,6 +6,7 @@ import { generateColorArray } from './helper';
 
 export class PieChart {
     public svg;
+    public legend;
 
     constructor(public data: Object, private options) {
         options = options || {};
@@ -26,6 +27,13 @@ export class PieChart {
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
                 ',' + (this.options.height / 2) + ')');
+
+        this.legend = this.svg.append("g")
+            .attr("class", "legend")
+            .attr("x", 0)
+            .attr("y", 250)
+            .attr("height", 100)
+            .attr("width", 100);
     }
 
     // @todo Get name of the heading
@@ -113,15 +121,7 @@ export class PieChart {
 
         // Adds the legend
         // @todo Add the full name of the key
-        // @todo Make sure the legend only renders once
-        let legend = this.svg.append("g")
-            .attr("class", "legend")
-            .attr("x", 0)
-            .attr("y", 250)
-            .attr("height", 100)
-            .attr("width", 100);
-
-        legend.selectAll('g').data(pieData)
+        this.legend.selectAll('g').data(pieData)
             .enter()
             .append('g')
             .each(function (d, i) {
