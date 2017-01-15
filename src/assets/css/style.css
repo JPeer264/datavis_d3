@@ -19,7 +19,9 @@
 }
 
 .tooltip {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
     background-color: white;
     padding: 1rem;
     pointer-events: none;
@@ -129,11 +131,11 @@ h3 {
     display: none;
 }
 
-.rect {
+.rect, .path {
     transition: .1s opacity;
 }
 
-.rect:hover {
+.rect:hover, .path:hover {
     cursor: pointer;
     opacity: .8;
 }

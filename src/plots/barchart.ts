@@ -1,8 +1,8 @@
 import $  = require('jquery');
 import d3 = require('d3');
 
-import { chartOptions } from '../assets/data/options';
-import { generateColorArray, getStackedNames } from './helper';
+import { jsonData, chartOptions } from '../assets/data/options';
+import { generateColorArray, getStackedNames, createTooltip } from './helper';
 
 export class BarChart {
     public x;
@@ -77,6 +77,8 @@ export class BarChart {
             .call(d3.axisLeft(this.y)
                 .ticks(5))
             .attr('font-size', '18pt');*/
+
+        this.tooltip = createTooltip();
     }
 
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
@@ -171,15 +173,13 @@ export class BarChart {
         const isTooltip   = false;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
-        console.log(stackedData.data.colorArray)
-
         let width  = this._width;
         let height = this._height;
         let x = this.x;
         let y = this.y;
-        let tooltip = d3.select('body').append('div')
-            .attr('class', 'tooltip')
-            .style('opacity', 0);
+        // let tooltip = d3.select('body').append('div')
+        //     .attr('class', 'tooltip')
+        //     .style('opacity', 0);
 
         // Scale the range of the data in the domains
         // @todo get right z.domain
@@ -236,22 +236,32 @@ export class BarChart {
             .attr('height', d => y(d[0]) - y(d[1]))
             .attr('width', x.bandwidth())
             // initialize event listeners
-            .on('mouseover', d => {
-                if (isTooltip) {
-                    tooltip.transition()
-                        .duration(200)
-                        .style('opacity', .9);
-                    tooltip.html('test')
-                        .style('left', (d3.event.pageX) + 'px')
-                        .style('top', (d3.event.pageY - 28) + 'px');
-                }
+            .on('mouseover', () => {
+                this.tooltip.classed('hidden', false);
             })
-            .on('mouseout', d => {
-                if (isTooltip) {
-                    tooltip.transition()
-                        .duration(500)
-                        .style('opacity', 0);
+            .on('mouseout', () => {
+                this.tooltip.classed('hidden', true);
+            })
+            .on('mousemove', d => {
+                const xPosition = d3.mouse($('body')[0])[0] - 20 - ($('.tooltip').width() / 2);
+                const yPosition = d3.mouse($('body')[0])[1] - 50 - $(window).scrollTop() - ($('.tooltip').height() / 2);
+
+                let text = '';
+                let amount = d[1] - d[0];
+
+                for (let key in d.data.filterData) {
+                    let value = d.data.filterData[key];
+                    let textValue = value;
+
+                    if (chartOptions[value] && chartOptions[value].name) {
+                        textValue = chartOptions[value].name;
+                    }
+
+                    text += `${jsonData[key].name}: <b>${textValue}</b><br />`;
                 }
+
+                self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
+                self.tooltip.html(`<b>${amount} People</b></br>${text}`);
             })
             .on('click', function (d, i) {
                 const $this = $(this);
