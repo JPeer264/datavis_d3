@@ -15,11 +15,11 @@ export class BarChart {
     public legend;
 
     constructor(private options) {
-        options.manager   = options.manager || {}
-        options.selector  = options.selector || 'body',
-        options.className = options.className || 'chart',
+        options.manager   = options.manager || {};
+        options.selector  = options.selector || 'body';
+        options.className = options.className || 'chart';
 
-        this.addHeader('h1');
+        this.addHeader("h1", this.options.stacked.x.name);
 
         this.svg = d3.select(options.selector)
            .append('div')
@@ -29,7 +29,7 @@ export class BarChart {
             .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('viewBox', '0 0 1000 800')
             .classed('svg-content-responsive', true)
-           .append('g')
+           .append('g');
             // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.x = d3.scaleBand()
@@ -102,12 +102,12 @@ export class BarChart {
                     }
                 }
 
-                appendArray.push(toAppend)
+                appendArray.push(toAppend);
 
                 counter += 1;
             }
 
-            xRange = Object.keys(seperatedData[label])
+            xRange = Object.keys(seperatedData[label]);
 
             result.push(appendArray);
 
@@ -191,7 +191,7 @@ export class BarChart {
             .attr('width', x.bandwidth())
             .transition(300)
             .attr('y', d => y(d[1]))
-            .attr('height', d => y(d[0]) - y(d[1]))
+            .attr('height', d => y(d[0]) - y(d[1]));
 
         barchart.enter().append('g')
             .attr('fill', d => z(d.key))
@@ -226,7 +226,7 @@ export class BarChart {
             })
             .on('click', function (d, i) {
                 const $this = $(this);
-                const className = `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`
+                const className = `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`;
 
                 if (self.options.interactive) {
                     if ($this.hasClass('rect-active')) {
