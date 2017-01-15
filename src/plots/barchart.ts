@@ -163,6 +163,7 @@ export class BarChart {
             .append('g')
             .each(function(d, i) {
                 let g = d3.select(this);
+
                 g.append('rect')
                     .attr('x', width - 170)
                     .attr('y', 10 + i * 40)
@@ -176,7 +177,7 @@ export class BarChart {
                     .attr('height',30)
                     .attr('width',100)
                     .style('fill', stackedData.data.colorArray[i])
-                    .text(stackedData[i]['key'])
+                    .text(chartOptions[d.key].name)
                         .attr('font-size', '18pt');
             });
 
