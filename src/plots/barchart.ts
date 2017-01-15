@@ -79,11 +79,14 @@ export class BarChart {
             seperatedData[d[seperator]][d[chooser]] += 1;
         }
 
-
-        for (let label in seperatedData) {
+        for (let label of this.options.stacked.label.options) {
             let counter     = 0;
             let startPoint  = 0;
             let appendArray = [];
+
+            if (!seperatedData[label]) {
+                seperatedData[label] = {};
+            }
 
             // hardcoded... fill up missing keys
             seperatedData[label][1] = seperatedData[label][1] || 0;
