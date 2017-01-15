@@ -21,7 +21,7 @@ export class PieChart {
             .classed('svg-container', true)
             .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '-100 -100 600 600')
+            .attr('viewBox', '-65 0 500 500')
             .classed('svg-content-responsive', true)
             .append('g')
             .attr('transform', 'translate(' + (this.options.width / 2) +
@@ -88,7 +88,7 @@ export class PieChart {
             .sort(null);
 
         const path = this.svg.selectAll('path')
-            .data(pie(pieData))
+            .data(pie(pieData));
 
         path.enter()
             .append('path')
@@ -116,7 +116,7 @@ export class PieChart {
         // @todo Make sure the legend only renders once
         let legend = this.svg.append("g")
             .attr("class", "legend")
-            .attr("x", 400)
+            .attr("x", 0)
             .attr("y", 250)
             .attr("height", 100)
             .attr("width", 100);
@@ -131,20 +131,20 @@ export class PieChart {
                 let name = chartOptions[label].name;
 
                 g.append("rect")
-                    .attr("x", 0)
-                    .attr("y", 230 + i*40)
-                    .attr("width", 30)
-                    .attr("height", 30)
+                    .attr("x", -100)
+                    .attr("y", 210 + i*50)
+                    .attr("width", 34)
+                    .attr("height", 34)
                     .style("fill", fillColor);
 
                 g.append("text")
-                    .attr("x", 44)
-                    .attr("y", 242 + i*40 + 9)
+                    .attr("x", -50)
+                    .attr("y", 240 + i*50)
                     .attr("height",30)
                     .attr("width",100)
                     .style("fill", fillColor)
                     .text(name)
-                    .attr("font-size", "18pt");
+                        .attr("font-size", "24pt");
             });
     }
 }
