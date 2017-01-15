@@ -40,7 +40,7 @@ export class ChartManager {
     }
 
     filterData(filterObject) {
-        const sortedPieData = [];
+        const sortedData = [];
 
         // sort pieData
         for (let item of this.data) {
@@ -53,11 +53,11 @@ export class ChartManager {
             }
 
             if (acceptArray.length === Object.keys(filterObject).length) {
-                sortedPieData.push(item);
+                sortedData.push(item);
             }
         }
 
-        this.filteredData = sortedPieData;
+        this.filteredData = sortedData;
     }
 
     releaseFilter() {
