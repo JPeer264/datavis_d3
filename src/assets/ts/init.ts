@@ -93,8 +93,8 @@ const setChoices = (): void => {
         let selectionBin = $('#selection-2').val();
 
         if (selectionNum && selectionBin) {
-            $('.choice--custom + p').removeClass('disabled');
             $('.choice--custom').addClass('enabled');
+            $('.choice--custom + p').removeClass('disabled');
         }
     });
 
@@ -129,6 +129,8 @@ const showChoices = () => {
                 $('.board--choices').fadeIn(300);
                 $('.barchart, .piechart').empty();
                 $('.choice--custom form')[0].reset();
+                $('.choice--custom').removeClass("enabled");
+                $('.choice--custom + p').addClass("disabled");
             }
         });
     });
