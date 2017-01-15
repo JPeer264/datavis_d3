@@ -114,8 +114,22 @@ const setChoices = (): void => {
         let selectionNum = $('#selection-1').val();
         let selectionBin = $('#selection-2').val();
 
+        let pieArray: Array<any> = [ jsonData.romantic, jsonData.pstatus, jsonData.sex, jsonData.address ];
+
+        pieArray = pieArray.filter((d, i) => {
+            if (d.key === selectionBin || d.key === selectionNum) {
+                return false;
+            }
+
+            return true;
+        });
+
+        if (pieArray.length === 4) {
+            pieArray = pieArray.slice(0, 3);
+        }
+
         if (selectionNum && selectionBin) {
-            showCharts(jsonData[selectionBin], jsonData[selectionNum], [ jsonData.romantic, jsonData.pstatus, jsonData.sex ]);
+            showCharts(jsonData[selectionBin], jsonData[selectionNum], pieArray);
         }
     });
 };
