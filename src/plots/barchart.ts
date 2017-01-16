@@ -231,7 +231,7 @@ export class BarChart {
           // ================= //
          // == CHART.RECTS == //
         // ================= //
-        const rects = categoriesUpdated.selectAll('rect')
+        const rects = categoriesUpdated.selectAll('.rect')
             .data(d => d);
 
         // Enter
