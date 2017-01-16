@@ -143,6 +143,7 @@ const showChoices = () => {
             done: () => {
                 $('.board').fadeIn(300);
                 $('.barchart, .piechart').empty();
+                $('.compare-charts').remove();
                 $('.choice--custom form')[0].reset();
                 $('.choice--custom').removeClass("enabled");
                 $('.choice--custom + p').addClass("disabled");
