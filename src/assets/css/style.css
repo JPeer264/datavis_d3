@@ -209,3 +209,7 @@ small {
     font-size: .8em;
     padding: 0 1em 0 .4em;
 }
+
+.selection {
+    display: none;
+}

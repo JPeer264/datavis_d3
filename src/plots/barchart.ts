@@ -267,10 +267,12 @@ export class BarChart {
                     if ($this.hasClass('rect-active')) {
                         $(selectors.thisClass).removeClass('low-alpha rect-active');
                         $(selectors.selection).removeClass('selection--active');
-
-                        // @mario deletes yourSelection text
-                        // animation needed!!!!!!
-                        $(selectors.yourSelection).html('');
+                        $(selectors.yourSelection).slideUp({
+                            duration: 300,
+                            done: () => {
+                                $(selectors.yourSelection).html('');
+                            }
+                        });
 
                         manager.releaseFilter();
                         manager.updateCharts();
@@ -306,7 +308,8 @@ export class BarChart {
                     // @mario adds yourSelection text
                     // animation needed!!!!!!
                     $(selectors.yourSelection).html(yourSelectionText);
-                    $(selectors.selection).addClass('selection--active');
+                    $(selectors.selection).slideDown(300);
+
                     $(selectors.thisClass).removeClass('low-alpha rect-active');
                     $(selectors.thisClass).addClass('low-alpha');
                     $this.removeClass('low-alpha');
