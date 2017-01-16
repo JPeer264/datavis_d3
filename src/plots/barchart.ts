@@ -366,6 +366,8 @@ export class BarChart {
         let width  = this._width;
         let height = this._height;
 
+        const dataLength = data.length;
+
         const legend = this.svg
             .selectAll('.legend')
             .data(data, d => d);
@@ -380,16 +382,18 @@ export class BarChart {
             .each(function(d, i) {
                 let g = d3.select(this);
 
+                console.log(i)
+
                 g.append('rect')
                     .attr('x', width + 20)
-                    .attr('y', (height/2 - 30) + i * 40)
+                    .attr('y', (height / 2 - 30) + (dataLength - 1 - i) * 40)
                     .attr('width', 24)
                     .attr('height', 24)
-                    .style('fill', d => chartOptions[d.key].color);
+                    .style('fill', (d, i) => chartOptions[d.key].color);
 
                 g.append('text')
                     .attr('x', width + 54)
-                    .attr('y', (height/2 - 10) + i * 40)
+                    .attr('y', (height / 2 - 10) + (dataLength - 1 - i) * 40)
                     .attr('height',30)
                     .attr('width',100)
                     .style('fill', '#333')
