@@ -40,11 +40,12 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
           // ================ //
          // == add charts == //
         // ================ //
-        manager.addPieChart(...pieCharts);
-        manager.addBarChart(new BarChart({
+        manager.addChart(...pieCharts);
+        manager.addUnlinkedChart(new BarChart({
             selector: '#barchart1',
             manager,
             data,
+            unlinked: true,
             compareWithOthers: 'numeric',
             stacked: {
                 x: jsonData.goout,
@@ -57,6 +58,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
         // ============ //
         mainBarChart.update();
         manager.updateCharts();
+        manager.updateUnlinkedCharts();
     });
 };
 

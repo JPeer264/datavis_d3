@@ -92,7 +92,15 @@ export class BarChart {
 
 
                 options.stacked.label = jsonData[$this.val()];
+
+                if (options.unlinked) {
+                    options.manager.updateUnlinkedCharts();
+
+                    return;
+                }
+
                 options.manager.updateCharts();
+
             });
         }
     }
