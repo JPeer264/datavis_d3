@@ -1,10 +1,4 @@
 export const jsonData = {
-    studytime: {
-        key: 'studytime',
-        name: 'Weekly Studytime',
-        type: 'numeric',
-        options: [1, 2, 3, 4, 5]
-    },
     famrel: {
         key: 'famrel',
         name: 'Family Relationship Quality',
