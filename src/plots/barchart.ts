@@ -71,12 +71,17 @@ export class BarChart {
             for (let label in compareObj) {
                 const value = compareObj[label];
 
+                // filter by type
                 if (typeof options.compareWithOthers === 'string') {
                     if (value.type !== options.compareWithOthers) {
                         continue;
                     }
                 }
 
+                // do not compare with the same
+                if (options.stacked.x.key === value.key) {
+                    continue;
+                }
 
                 selectOptions += `<option value="${ value.key }">${ value.name }</option>`;
             }
