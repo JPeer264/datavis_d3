@@ -28,7 +28,7 @@ export class ChartManager {
     updateUnlinkedCharts(): void {
         // update piecharts
         for (let chart of this.unlinkedCharts) {
-            chart.update(this.filteredData);
+            chart.update(this.data);
         }
     }
 
