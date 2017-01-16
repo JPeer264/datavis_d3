@@ -382,8 +382,6 @@ export class BarChart {
             .each(function(d, i) {
                 let g = d3.select(this);
 
-                console.log(i)
-
                 g.append('rect')
                     .attr('x', width + 20)
                     .attr('y', (height / 2 - 30) + (dataLength - 1 - i) * 40)
