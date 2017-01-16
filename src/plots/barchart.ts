@@ -10,9 +10,10 @@ export class BarChart {
     public svg;
     public tooltip;
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
-    public _width:number  = 800; // - this.margin.left - this.margin.right;
-    public _height:number = 440; //- this.margin.top  - this.margin.bottom;
+    public _width: number  = 800; // - this.margin.left - this.margin.right;
+    public _height: number = 440; //- this.margin.top  - this.margin.bottom;
     public legend;
+    public compareSelector: String;
 
     constructor(private options) {
         options.manager   = options.manager || {};
@@ -21,6 +22,16 @@ export class BarChart {
 
         if (options.interactive) {
             this.addHeader("h2", getStackedNames(this.options.stacked));
+        }
+
+        let x = d3.scaleLinear()
+            .domain([1, 5])
+            .range([100, this._width - 100]);
+
+        this.compareSelector = options.selector.slice(1, options.selector.length);
+
+        for (let stackedKey in options.stacked) {
+            this.compareSelector += `-${ options.stacked[stackedKey].key }`;
         }
 
         this.svg = d3.select(options.selector)
@@ -32,7 +43,6 @@ export class BarChart {
             .attr('viewBox', '0 0 1050 550')
             .classed('svg-content-responsive', true)
            .append('g');
-            // .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
@@ -48,10 +58,6 @@ export class BarChart {
             .attr('height', 100)
             .attr('width', 100);
 
-        let x = d3.scaleLinear()
-            .domain([1, 5])
-            .range([100, this._width - 100]);
-
         this.svg.append("g")
             .attr("transform", "translate(0," + (this._height + 10) + ")")
             .attr("class", "axis")
@@ -59,12 +65,41 @@ export class BarChart {
                 .ticks(5))
                 .attr('font-size', '18pt');
 
-/*        this.svg.append("g")
-            .attr("class", "axis")
-            .call(d3.axisLeft(this.y))
-            .attr("transform", "translate(20," + 0 + ")");*/
-
         this.tooltip = createTooltip();
+
+        // register comparing with others
+        if (options.compareWithOthers) {
+            let compareObj: Object = jsonData;
+            let selectOptions = '';
+
+            if (toString.call(options.compareWithOthers) === '[object Object]') {
+                compareObj = options.compareWithOthers;
+            }
+
+            for (let label in compareObj) {
+                const value = compareObj[label];
+
+                selectOptions += `<option value="${ value.key }">${ value.name }</option>`;
+            }
+
+            $(`
+                <p class="compare-charts text-center">
+                    <strong>${ options.stacked.x.name }</strong> &
+                    <select id="${ this.compareSelector }">
+                        <option selected value="${ options.stacked.label.key }">${ options.stacked.label.name }</option>
+                        ${ selectOptions }
+                    </select>
+                </p>
+            `).insertBefore(options.selector);
+
+            // add listener for options
+            $(document).on('change', `select#${ this.compareSelector }`, function () {
+                const $this = $(this);
+
+                options.stacked.label = jsonData[$this.val()];
+                options.manager.updateCharts();
+            });
+        }
     }
 
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
@@ -305,13 +340,11 @@ export class BarChart {
                     manager.filterData(d.data.filterData);
                     manager.updateCharts();
 
-                    // @mario adds yourSelection text
-                    // animation needed!!!!!!
                     $(selectors.yourSelection).html(yourSelectionText);
                     $(selectors.selection).slideDown(300);
-
                     $(selectors.thisClass).removeClass('low-alpha rect-active');
                     $(selectors.thisClass).addClass('low-alpha');
+
                     $this.removeClass('low-alpha');
                     $this.addClass('rect-active');
                 }
