@@ -191,7 +191,21 @@ small {
     margin-bottom: 2em;
 }
 
+.selection strong {
+    color: #d73027;
+}
+
 .tip {
     margin: 2em 0;
     text-align: center;
+}
+
+.compare-charts {
+    font-size: 1.8em;
+}
+
+.compare-charts select {
+    width: 380px;
+    font-size: .8em;
+    padding: 0 1em 0 .4em;
 }
