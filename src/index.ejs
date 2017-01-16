@@ -8,44 +8,46 @@
         <link href="https://fonts.googleapis.com/css?family=Cabin:400,600,600i|Open+Sans" rel="stylesheet">
     </head>
     <body>
-        <div class="board--choices">
-            <div class="row header">
-                <h1>What do you want to know?</h1>
-                <h4>Please select the data you want to compare</h4>
-            </div>
-
-            <div class="choices row">
-                <div class="choice--wrapper column small-12 medium-4">
-                    <img class="choice choice--default" id="choice-1" src="assets/img/choice.svg" />
-                    <p>Alcohol Consumption &<br>Sex</p>
+        <div class="board">
+            <div class="board__choices">
+                <div class="row header">
+                    <h1>What do you want to know?</h1>
+                    <h4>Please select the data you want to compare</h4>
                 </div>
 
-                <div class="choice--wrapper column small-12 medium-4">
-                    <img class="choice choice--default" id="choice-2" src="assets/img/choice.svg" />
-                    <p>Going out with friends &<br>Parents Cohabitation Status</p>
-                </div>
-
-                <div class="choice--wrapper column small-12 medium-4">
-                    <div class="choice choice--custom">
-                        <form>
-                            <select id="selection-1">
-                                <option disabled selected>Choose here</option>
-                            </select>
-                            <select id="selection-2">
-                                <option disabled selected>Choose here</option>
-                            </select>
-                        </form>
+                <div class="choices row">
+                    <div class="choice--wrapper column small-12 medium-4">
+                        <img class="choice choice--default" id="choice-1" src="assets/img/choice.svg" />
+                        <p>Alcohol Consumption &<br>Sex</p>
                     </div>
-                    <p class="disabled" id="choice-3">Compare custom choices</p>
+
+                    <div class="choice--wrapper column small-12 medium-4">
+                        <img class="choice choice--default" id="choice-2" src="assets/img/choice.svg" />
+                        <p>Going out with friends &<br>Parents Cohabitation Status</p>
+                    </div>
+
+                    <div class="choice--wrapper column small-12 medium-4">
+                        <div class="choice choice--custom">
+                            <form>
+                                <select id="selection-1">
+                                    <option disabled selected>Choose here</option>
+                                </select>
+                                <select id="selection-2">
+                                    <option disabled selected>Choose here</option>
+                                </select>
+                            </form>
+                        </div>
+                        <p class="disabled" id="choice-3">Compare custom choices</p>
+                    </div>
+
                 </div>
 
-            </div>
-
-            <div class="row">
-                <div class="column small-12 text-center info">
-                    <small>This app uses the <a href="https://d3js.org/" target="_blank">D3.v4.js</a>
-                        Javascript library and a <a href="https://www.kaggle.com/uciml/student-alcohol-consumption" target="_blank">dataset</a>
-                        about students.</small>
+                <div class="row">
+                    <div class="column small-12 text-center info">
+                        <small>This app uses the <a href="https://d3js.org/" target="_blank">D3.v4.js</a>
+                            Javascript library and a <a href="https://www.kaggle.com/uciml/student-alcohol-consumption" target="_blank">dataset</a>
+                            about students.</small>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,7 +12,6 @@ export class BarChart {
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
     public _width: number  = 800; // - this.margin.left - this.margin.right;
     public _height: number = 440; //- this.margin.top  - this.margin.bottom;
-    public legend;
     public compareSelector: String;
 
     constructor(private options) {
@@ -35,14 +34,14 @@ export class BarChart {
         }
 
         this.svg = d3.select(options.selector)
-           .append('div')
+            .append('div')
             .classed('svg-container', true)
             .classed('svg-container--barchart', true)
-           .append('svg')
+            .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('viewBox', '0 0 1050 550')
             .classed('svg-content-responsive', true)
-           .append('g');
+            .append('g');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
@@ -51,26 +50,14 @@ export class BarChart {
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
 
-        this.legend = this.svg.append('g')
-            .attr('class', 'legend')
-            .attr('x', 666 - 65)
-            .attr('y', 25)
-            .attr('height', 100)
-            .attr('width', 100);
-
         this.svg.append("g")
             .attr("transform", "translate(0," + (this._height + 10) + ")")
             .attr("class", "axis")
             .call(d3.axisBottom(x)
                 .ticks(5))
-                .attr('font-size', '18pt');
+            .attr('font-size', '18pt');
 
         this.tooltip = createTooltip();
-
-        // interactive options
-        if (options.interactive) {
-            this.addHeader("h1", getStackedNames(options.stacked));
-        }
 
         // register comparing with others
         if (options.compareWithOthers) {
@@ -101,12 +88,16 @@ export class BarChart {
             $(document).on('change', `select#${ this.compareSelector }`, function () {
                 const $this = $(this);
 
+
                 options.stacked.label = jsonData[$this.val()];
                 options.manager.updateCharts();
             });
         }
     }
 
+    //////////////////
+    // == PUBLIC == //
+    //////////////////
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
         const chooser = stackedX.key;
         const seperator = stackedLabel.key;
@@ -193,64 +184,57 @@ export class BarChart {
     }
 
     public update(data = undefined): void {
-        const self        = this;
-        const stack       = d3.stack();
-        const manager     = this.options.manager;
-        const isTooltip   = false;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
-        let width  = this._width;
-        let height = this._height;
         let x = this.x;
         let y = this.y;
-        // let tooltip = d3.select('body').append('div')
-        //     .attr('class', 'tooltip')
-        //     .style('opacity', 0);
 
-        // Scale the range of the data in the domains
-        // @todo get right z.domain
         x.domain(stackedData.data.xRange);
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
-        // Adds the legend
-        this.legend.selectAll('g').data(stackedData)
-            .enter()
-            .append('g')
-            .each(function(d, i) {
-                let g = d3.select(this);
 
-                g.append('rect')
-                    .attr('x', width + 20)
-                    .attr('y', (height/2 - 30) + i * 40)
-                    .attr('width', 24)
-                    .attr('height', 24)
-                    .style('fill', d => chartOptions[d.key].color);
+        // =============== //
+        // == FUNCTIONS == //
+        // =============== //
+        this.addLegend(stackedData);
+        this.addChart(stackedData);
+    }
 
-                g.append('text')
-                    .attr('x', width + 54)
-                    .attr('y', (height/2 - 10) + i * 40)
-                    .attr('height',30)
-                    .attr('width',100)
-                    .style('fill', '#333')
-                    .text(chartOptions[d.key].name)
-                        .attr('font-size', '16pt');
-            });
+    ///////////////////
+    // == PRIVATE == //
+    ///////////////////
+    private addChart(data) {
+        const self        = this;
+        const manager     = this.options.manager;
 
+        let x = this.x;
+        let y = this.y;
+
+        // ====================== //
+        // == CHART.CATEGORIES == //
+        // ====================== //
         const categories = this.svg.selectAll('.category')
-            .data(stackedData)
+            .data(data)
 
+        // Enter
         const categoriesEntered = categories.enter()
             .append('g')
             .attr('class', 'category');
 
+        // Update
         const categoriesUpdated = categories.merge(categoriesEntered)
             .attr('fill', d => chartOptions[d.key].color);
 
+        // Remove
         categories.exit().remove();
 
-        const rects = categoriesUpdated.selectAll('rect')
+        // ================= //
+        // == CHART.RECTS == //
+        // ================= //
+        const rects = categoriesUpdated.selectAll('.rect')
             .data(d => d);
 
+        // Enter
         const rectsEntered = rects.enter()
             .append('rect')
             .attr('class', (d, i) => {
@@ -289,7 +273,6 @@ export class BarChart {
                 self.tooltip.html(`<strong>${amount} People</strong><br>${text}`);
             })
             .on('click', function (d, i) {
-                console.log(d);
                 const $this = $(this);
                 const selectors = {
                     thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
@@ -301,8 +284,8 @@ export class BarChart {
                 let yourSelectionText = '';
 
                 if (self.options.interactive) {
-                      // ============================================================ //
-                     // == unselect all, if clicked on an active barchart section == //
+                    // ============================================================ //
+                    // == unselect all, if clicked on an active barchart section == //
                     // ============================================================ //
                     if ($this.hasClass('rect-active')) {
                         $(selectors.thisClass).removeClass('low-alpha rect-active');
@@ -320,8 +303,8 @@ export class BarChart {
                         return;
                     }
 
-                      // ============================== //
-                     // == another barchart section == //
+                    // ============================== //
+                    // == another barchart section == //
                     // ============================== //
                     for (let label in d.data.filterData) {
                         let value = d.data.filterData[label];
@@ -355,6 +338,7 @@ export class BarChart {
                 }
             });
 
+        // Update
         const rectsUpdated = rects.merge(rectsEntered)
             .attr('x', (d, i) => x(i + 1))
             .attr('width', x.bandwidth())
@@ -362,6 +346,45 @@ export class BarChart {
             .attr('y', d => y(d[1]))
             .attr('height', d => y(d[0]) - y(d[1]));
 
+        // Remove
         rects.exit().remove();
+    }
+
+    private addLegend(data) {
+        let width  = this._width;
+        let height = this._height;
+
+        const legend = this.svg
+            .selectAll('.legend')
+            .data(data, d => d);
+
+        const legendEnter = legend.enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('x', 666 - 65)
+            .attr('y', 25)
+            .attr('height', 100)
+            .attr('width', 100)
+            .each(function(d, i) {
+                let g = d3.select(this);
+
+                g.append('rect')
+                    .attr('x', width + 20)
+                    .attr('y', (height/2 - 30) + i * 40)
+                    .attr('width', 24)
+                    .attr('height', 24)
+                    .style('fill', d => chartOptions[d.key].color);
+
+                g.append('text')
+                    .attr('x', width + 54)
+                    .attr('y', (height/2 - 10) + i * 40)
+                    .attr('height',30)
+                    .attr('width',100)
+                    .style('fill', '#333')
+                    .text(chartOptions[d.key].name)
+                    .attr('font-size', '16pt');
+            });
+
+        legend.exit().remove();
     }
 }

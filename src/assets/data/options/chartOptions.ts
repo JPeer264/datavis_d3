@@ -59,4 +59,24 @@ export const chartOptions = {
         color: '#fdae61',
         name: 'Other'
     },
+    '1': {
+        color: '#fdae61',
+        name: 'Very Low'
+    },
+    '2': {
+        color: '#fdae61',
+        name: 'Low'
+    },
+    '3': {
+        color: '#fdae61',
+        name: 'Average'
+    },
+    '4': {
+        color: '#fdae61',
+        name: 'High'
+    },
+    '5': {
+        color: '#fdae61',
+        name: 'Very high'
+    }
 };

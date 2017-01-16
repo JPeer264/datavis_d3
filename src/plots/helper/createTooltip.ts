@@ -6,8 +6,7 @@ export const createTooltip = () => {
 
     if ($tooltip.length === 0) {
         d3.select('body').append('div')
-            .attr('class', 'tooltip')
-            .attr('class', 'hidden');
+            .attr('class', 'tooltip hidden');
     }
 
     return d3.select('.tooltip');
