@@ -44,6 +44,10 @@ body, html {
     height: 100%;
 }
 
+body {
+    zoom: .8;
+}
+
 h1, h2, h3, h4 {
     text-align: center;
     font-family: 'Cabin', sans-serif;
@@ -62,6 +66,10 @@ h2 {
 
 h3 {
     font-size: 1.8em;
+}
+
+.row {
+    max-width: 60rem;
 }
 
 .board {
