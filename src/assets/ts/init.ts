@@ -12,7 +12,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
     let counter = 1;
 
     // Shows the chart summary page
-    $('.board--choices').fadeOut({
+    $('.board').fadeOut({
         duration: 300,
         done: () => $('.summary').fadeIn(300)
     });
@@ -141,7 +141,7 @@ const showChoices = () => {
         $('.summary').fadeOut({
             duration: 300,
             done: () => {
-                $('.board--choices').fadeIn(300);
+                $('.board').fadeIn(300);
                 $('.barchart, .piechart').empty();
                 $('.choice--custom form')[0].reset();
                 $('.choice--custom').removeClass("enabled");

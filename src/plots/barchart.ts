@@ -88,6 +88,7 @@ export class BarChart {
             $(document).on('change', `select#${ this.compareSelector }`, function () {
                 const $this = $(this);
 
+
                 options.stacked.label = jsonData[$this.val()];
                 options.manager.updateCharts();
             });

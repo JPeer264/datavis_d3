@@ -35,10 +35,13 @@
     font-size: 1.3em;
 }
 
-body {
+body, html {
     font-family: 'Open Sans', sans-serif;
     background: url('../img/bg.svg') no-repeat center center fixed;
     background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 h1, h2, h3, h4 {
@@ -61,15 +64,22 @@ h3 {
     font-size: 1.8em;
 }
 
-.board--choices{
+.board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.board__choices{
     margin: 0 4em;
 }
 
-.board--choices h1 {
-    margin: 1.2em 0 .1em 0;
+.board__choices h1 {
+    margin-bottom: .1em;
 }
 
-.board--choices h4 {
+.board__choices h4 {
     margin-bottom: 3em;
 }
 
