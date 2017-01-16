@@ -23,10 +23,6 @@ export class BarChart {
             this.addHeader("h2", getStackedNames(this.options.stacked));
         }
 
-        let x = d3.scaleLinear()
-            .domain([1, 5])
-            .range([100, this._width - 100]);
-
         this.compareSelector = options.selector.slice(1, options.selector.length);
 
         for (let stackedKey in options.stacked) {
@@ -49,13 +45,6 @@ export class BarChart {
 
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
-
-        this.svg.append("g")
-            .attr("transform", "translate(0," + (this._height + 10) + ")")
-            .attr("class", "axis")
-            .call(d3.axisBottom(x)
-                .ticks(5))
-            .attr('font-size', '18pt');
 
         this.tooltip = createTooltip();
 
@@ -147,9 +136,12 @@ export class BarChart {
             seperatedData[label][4] = seperatedData[label][4] || 0;
             seperatedData[label][5] = seperatedData[label][5] || 0;
 
+            xRange = [];
+
             for (let key in seperatedData[label]) {
                 let toAppend: any;
                 let value: any = seperatedData[label][key];
+
 
                 startPoint = 0;
 
@@ -168,12 +160,14 @@ export class BarChart {
                     }
                 }
 
+                xRange.push(chartOptions[key].name)
+
                 appendArray.push(toAppend);
 
                 counter += 1;
             }
 
-            xRange = Object.keys(seperatedData[label]);
+            // xRange = Object.keys(seperatedData[label]);
 
             result.push(appendArray);
 
@@ -198,26 +192,39 @@ export class BarChart {
     public update(data = undefined): void {
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
-        let x = this.x;
-        let y = this.y;
 
-        x.domain(stackedData.data.xRange);
-        y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
-
-
+          // =============== //
+         // == FUNCTIONS == //
         // =============== //
-        // == FUNCTIONS == //
-        // =============== //
+        this.addAxis(stackedData);
         this.addLegend(stackedData);
         this.addChart(stackedData);
     }
 
+      ///////////////////
+     // == PRIVATE == //
     ///////////////////
-    // == PRIVATE == //
-    ///////////////////
+    private addAxis(data) {
+        let x = this.x;
+        let y = this.y;
+
+        x.domain(data.data.xRange);
+        y.domain([0, d3.max(data[data.length - 1], d => d[1])]);
+
+        $(`#${ this.compareSelector }-x-axis`).remove();
+
+        const xAxis = this.svg.append('g')
+            .attr('transform', `translate(0, ${ this._height + 10 })`)
+            .attr('class', 'axis axis--x')
+            .attr('id', `${ this.compareSelector }-x-axis`)
+            .call(d3.axisBottom(x)
+                .ticks(5))
+            .attr('font-size', '18pt');
+    }
+
     private addChart(data) {
-        const self        = this;
-        const manager     = this.options.manager;
+        const self    = this;
+        const manager = this.options.manager;
 
         let x = this.x;
         let y = this.y;
@@ -252,7 +259,7 @@ export class BarChart {
             .attr('class', (d, i) => {
                 return `rect interactive-rect-${Object.keys(d.data.filterData).join('-')}`
             })
-            .attr('x', (d, i) => x(i + 1))
+            .attr('x', (d, i) => x(chartOptions[i + 1].name))
             .attr('y', d => y(d[1]))
             .attr('height', d => y(d[0]) - y(d[1]))
             .attr('width', x.bandwidth())
@@ -352,7 +359,7 @@ export class BarChart {
 
         // Update
         const rectsUpdated = rects.merge(rectsEntered)
-            .attr('x', (d, i) => x(i + 1))
+            .attr('x', (d, i) => x(chartOptions[i + 1].name))
             .attr('width', x.bandwidth())
             .transition(300)
             .attr('y', d => y(d[1]))
