@@ -251,21 +251,19 @@ export class BarChart {
                 const $this = $(this);
                 const selectors = {
                     thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
-                    // @mario change the information class
-                    // also variable name if needed
-                    moreInfo: '.more-info'
+                    yourSelection: '#your-selection'
                 };
 
                 let isFirstLoop = true;
-                let moreInfoText = '';
+                let yourSelectionText = '';
 
                 if (self.options.interactive) {
                     if ($this.hasClass('rect-active')) {
                         $(selectors.thisClass).removeClass('low-alpha rect-active');
 
-                        // @mario deletes moreinfo text
+                        // @mario deletes yourSelection text
                         // animation needed!!!!!!
-                        $(selectors.moreInfo).html('');
+                        $(selectors.yourSelection).html('');
 
                         manager.releaseFilter();
                         manager.updateCharts();
@@ -289,15 +287,15 @@ export class BarChart {
                             textValue = chartOptions[value].name;
                         }
 
-                        moreInfoText += `${prefix}${jsonData[label].name}: <strong>${ textValue }</strong>`;
+                        yourSelectionText += `${prefix}${jsonData[label].name}: <strong>${ textValue }</strong>`;
                     }
 
                     manager.filterData(d.data.filterData);
                     manager.updateCharts();
 
-                    // @mario adds moreinfo text
+                    // @mario adds yourSelection text
                     // animation needed!!!!!!
-                    $(selectors.moreInfo).html(moreInfoText);
+                    $(selectors.yourSelection).html(yourSelectionText);
                     $(selectors.thisClass).removeClass('low-alpha rect-active');
                     $(selectors.thisClass).addClass('low-alpha');
                     $this.removeClass('low-alpha');
