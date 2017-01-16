@@ -40,15 +40,17 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
           // ================ //
          // == add charts == //
         // ================ //
-        manager.addPieChart(...pieCharts);
-        manager.addBarChart(new BarChart({
+        manager.addChart(...pieCharts);
+        manager.addUnlinkedChart(new BarChart({
             selector: '#barchart1',
             manager,
             data,
+            unlinked: true,
             compareWithOthers: 'numeric',
             stacked: {
-                x: jsonData.goout,
+                x: jsonData[stackedX.key],
                 label: jsonData.famrel
+
             }
         }));
 
@@ -57,6 +59,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
         // ============ //
         mainBarChart.update();
         manager.updateCharts();
+        manager.updateUnlinkedCharts();
     });
 };
 
@@ -70,6 +73,10 @@ const loadOptions = (): void => {
     for (let key in jsonData){
         if (!typeObj[jsonData[key].type]) {
             typeObj[jsonData[key].type] = {}
+        }
+
+        if (jsonData[key].key === 'studytime') {
+            continue;
         }
 
         typeObj[jsonData[key].type][key] = jsonData[key].name

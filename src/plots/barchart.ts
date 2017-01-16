@@ -69,7 +69,7 @@ export class BarChart {
                 }
 
                 // do not compare with the same
-                if (options.stacked.x.key === value.key) {
+                if (options.stacked.x.key === value.key || options.stacked.label.key === value.key) {
                     continue;
                 }
 
@@ -92,7 +92,15 @@ export class BarChart {
 
 
                 options.stacked.label = jsonData[$this.val()];
+
+                if (options.unlinked) {
+                    options.manager.updateUnlinkedCharts();
+
+                    return;
+                }
+
                 options.manager.updateCharts();
+
             });
         }
     }

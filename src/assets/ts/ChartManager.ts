@@ -2,8 +2,8 @@ import d3 = require('d3');
 
 export class ChartManager {
     public data: Array<Object>;
-    public pieCharts: Array<any> = [];
-    public barCharts: Array<any> = [];
+    public charts: Array<any> = [];
+    public unlinkedCharts: Array<any> = [];
     public filteredData: Array<Object>;
 
     constructor(private csvFile: String) {}
@@ -20,22 +20,33 @@ export class ChartManager {
 
     updateCharts(): void {
         // update piecharts
-        for (let pieChart of this.pieCharts) {
-            pieChart.update(this.filteredData);
+        for (let chart of this.charts) {
+            chart.update(this.filteredData);
         }
+    }
 
+    updateUnlinkedCharts(): void {
         // update piecharts
-        for (let barChart of this.barCharts) {
-            barChart.update(this.filteredData);
+        for (let chart of this.unlinkedCharts) {
+            chart.update(this.data);
         }
     }
 
-    addPieChart(...charts): void {
-        this.pieCharts = this.pieCharts.concat(charts)
+    addChart(...charts): void {
+        this.charts = this.charts.concat(charts)
     }
 
-    addBarChart(...charts): void {
-        this.barCharts = this.barCharts.concat(charts)
+    /**
+     * if you set any charts here,
+     * make sure the [chart].options.unlinked is set to true
+     *
+     * example:
+     *     new Barchart({
+     *         unlinked: true
+     *     });
+     */
+    addUnlinkedChart(...charts): void {
+        this.unlinkedCharts = this.unlinkedCharts.concat(charts)
     }
 
     filterData(filterObject): void {
