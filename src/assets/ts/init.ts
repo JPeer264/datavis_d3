@@ -48,7 +48,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
             unlinked: true,
             compareWithOthers: 'numeric',
             stacked: {
-                x: jsonData.goout,
+                x: jsonData[stackedX.key],
                 label: jsonData.studytime
             }
         }));
@@ -72,6 +72,10 @@ const loadOptions = (): void => {
     for (let key in jsonData){
         if (!typeObj[jsonData[key].type]) {
             typeObj[jsonData[key].type] = {}
+        }
+
+        if (jsonData[key].key === 'studytime') {
+            continue;
         }
 
         typeObj[jsonData[key].type][key] = jsonData[key].name
