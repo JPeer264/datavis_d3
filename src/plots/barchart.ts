@@ -19,7 +19,9 @@ export class BarChart {
         options.selector  = options.selector || 'body';
         options.className = options.className || 'chart';
 
-        this.addHeader("h1", getStackedNames(this.options.stacked));
+        if (options.interactive) {
+            this.addHeader("h1", getStackedNames(this.options.stacked));
+        }
 
         this.svg = d3.select(options.selector)
            .append('div')
@@ -240,19 +242,35 @@ export class BarChart {
                         textValue = chartOptions[value].name;
                     }
 
-                    text += `${jsonData[key].name}: <b>${textValue}</b><br>`;
+                    text += `${jsonData[key].name}: <strong>${textValue}</strong><br>`;
                 }
 
                 self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
                 self.tooltip.html(`<strong>${amount} People</strong><br>${text}`);
             })
             .on('click', function (d, i) {
+                console.log(d);
                 const $this = $(this);
-                const className = `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`;
+                const selectors = {
+                    thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
+                    yourSelection: '#your-selection',
+                    selection: '.selection'
+                };
+
+                let isFirstLoop = true;
+                let yourSelectionText = '';
 
                 if (self.options.interactive) {
+                      // ============================================================ //
+                     // == unselect all, if clicked on an active barchart section == //
+                    // ============================================================ //
                     if ($this.hasClass('rect-active')) {
-                        $(className).removeClass('low-alpha rect-active');
+                        $(selectors.thisClass).removeClass('low-alpha rect-active');
+                        $(selectors.selection).removeClass('selection--active');
+
+                        // @mario deletes yourSelection text
+                        // animation needed!!!!!!
+                        $(selectors.yourSelection).html('');
 
                         manager.releaseFilter();
                         manager.updateCharts();
@@ -260,11 +278,37 @@ export class BarChart {
                         return;
                     }
 
+                      // ============================== //
+                     // == another barchart section == //
+                    // ============================== //
+                    for (let label in d.data.filterData) {
+                        let value = d.data.filterData[label];
+                        let textValue = value;
+
+                        let prefix = ' & ';
+
+                        if (isFirstLoop) {
+                            prefix = '';
+
+                            isFirstLoop = false;
+                        }
+
+                        if (chartOptions[value] && chartOptions[value].name) {
+                            textValue = chartOptions[value].name;
+                        }
+
+                        yourSelectionText += `${prefix}${jsonData[label].name}: <strong>${ textValue }</strong>`;
+                    }
+
                     manager.filterData(d.data.filterData);
                     manager.updateCharts();
 
-                    $(className).removeClass('low-alpha rect-active');
-                    $(className).addClass('low-alpha');
+                    // @mario adds yourSelection text
+                    // animation needed!!!!!!
+                    $(selectors.yourSelection).html(yourSelectionText);
+                    $(selectors.selection).addClass('selection--active');
+                    $(selectors.thisClass).removeClass('low-alpha rect-active');
+                    $(selectors.thisClass).addClass('low-alpha');
                     $this.removeClass('low-alpha');
                     $this.addClass('rect-active');
                 }
