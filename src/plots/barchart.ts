@@ -19,7 +19,9 @@ export class BarChart {
         options.selector  = options.selector || 'body';
         options.className = options.className || 'chart';
 
-        this.addHeader("h1", getStackedNames(this.options.stacked));
+        if (options.interactive) {
+            this.addHeader("h1", getStackedNames(this.options.stacked));
+        }
 
         this.svg = d3.select(options.selector)
            .append('div')
@@ -251,15 +253,20 @@ export class BarChart {
                 const $this = $(this);
                 const selectors = {
                     thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
-                    yourSelection: '#your-selection'
+                    yourSelection: '#your-selection',
+                    selection: '.selection'
                 };
 
                 let isFirstLoop = true;
                 let yourSelectionText = '';
 
                 if (self.options.interactive) {
+                      // ============================================================ //
+                     // == unselect all, if clicked on an active barchart section == //
+                    // ============================================================ //
                     if ($this.hasClass('rect-active')) {
                         $(selectors.thisClass).removeClass('low-alpha rect-active');
+                        $(selectors.selection).removeClass('selection--active');
 
                         // @mario deletes yourSelection text
                         // animation needed!!!!!!
@@ -271,6 +278,9 @@ export class BarChart {
                         return;
                     }
 
+                      // ============================== //
+                     // == another barchart section == //
+                    // ============================== //
                     for (let label in d.data.filterData) {
                         let value = d.data.filterData[label];
                         let textValue = value;
@@ -296,6 +306,7 @@ export class BarChart {
                     // @mario adds yourSelection text
                     // animation needed!!!!!!
                     $(selectors.yourSelection).html(yourSelectionText);
+                    $(selectors.selection).addClass('selection--active');
                     $(selectors.thisClass).removeClass('low-alpha rect-active');
                     $(selectors.thisClass).addClass('low-alpha');
                     $this.removeClass('low-alpha');
