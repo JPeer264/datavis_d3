@@ -127,6 +127,7 @@ h3 {
 .summary .summary-header {
     margin-top: 1em;
     margin-bottom: 1em;
+    color: #444;
 }
 
 .summary-header span {
