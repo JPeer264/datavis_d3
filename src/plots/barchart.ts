@@ -37,7 +37,8 @@ export class BarChart {
             .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('viewBox', '0 0 1050 550')
             .classed('svg-content-responsive', true)
-            .append('g');
+            .append('g')
+            .attr('style', 'transform: translateX(70px)');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
@@ -208,15 +209,25 @@ export class BarChart {
         let x = this.x;
         let y = this.y;
 
+        // set new axis
         x.domain(data.data.xRange);
         y.domain([0, d3.max(data[data.length - 1], d => d[1])]);
 
-        $(`#${ this.compareSelector }-x-axis`).remove();
+        // remove old axis
+        $(`.${ this.compareSelector }-y-axis`).remove();
+        $(`.${ this.compareSelector }-x-axis`).remove();
 
-        const xAxis = this.svg.append('g')
+        this.svg.append('g')
+            .attr('class', 'axis axis--y')
+            .attr('class', `${ this.compareSelector }-x-axis`)
+            .call(d3.axisLeft(y)
+                .ticks(5))
+            .attr('font-size', '18pt');
+
+        this.svg.append('g')
             .attr('transform', `translate(0, ${ this._height + 10 })`)
             .attr('class', 'axis axis--x')
-            .attr('id', `${ this.compareSelector }-x-axis`)
+            .attr('class', `${ this.compareSelector }-x-axis`)
             .call(d3.axisBottom(x)
                 .ticks(5))
             .attr('font-size', '18pt');
