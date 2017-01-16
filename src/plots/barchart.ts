@@ -35,7 +35,7 @@ export class BarChart {
             .classed('svg-container--barchart', true)
             .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1050 550')
+            .attr('viewBox', '0 0 1100 550')
             .classed('svg-content-responsive', true)
             .append('g')
             .attr('style', 'transform: translateX(70px)');
