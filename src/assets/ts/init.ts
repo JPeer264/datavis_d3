@@ -45,6 +45,7 @@ const showCharts = (stackedLabel, stackedX, pieChartArray): void => {
             selector: '#barchart1',
             manager,
             data,
+            compareWithOthers: true,
             stacked: {
                 x: jsonData.goout,
                 label: jsonData.pstatus
