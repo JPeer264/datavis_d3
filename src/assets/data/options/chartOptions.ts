@@ -46,5 +46,17 @@ export const chartOptions = {
     r: {
         color: '#fdae61',
         name: 'Rural'
-    }
+    },
+    mother: {
+        color: '#d73027',
+        name: 'Mother'
+    },
+    father: {
+        color: '#f46d43',
+        name: 'Father'
+    },
+    other: {
+        color: '#fdae61',
+        name: 'Other'
+    },
 };
