@@ -36,6 +36,15 @@ export class ChartManager {
         this.charts = this.charts.concat(charts)
     }
 
+    /**
+     * if you set any charts here,
+     * make sure the [chart].options.unlinked is set to true
+     *
+     * example:
+     *     new Barchart({
+     *         unlinked: true
+     *     });
+     */
     addUnlinkedChart(...charts): void {
         this.unlinkedCharts = this.unlinkedCharts.concat(charts)
     }
