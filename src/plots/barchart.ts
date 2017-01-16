@@ -12,7 +12,6 @@ export class BarChart {
     public margin = {top: 20, right: 20, bottom: 30, left: 40};
     public _width: number  = 800; // - this.margin.left - this.margin.right;
     public _height: number = 440; //- this.margin.top  - this.margin.bottom;
-    public legend;
     public compareSelector: String;
 
     constructor(private options) {
@@ -50,13 +49,6 @@ export class BarChart {
 
         this.y = d3.scaleLinear()
             .range([this._height, 0]);
-
-        this.legend = this.svg.append('g')
-            .attr('class', 'legend')
-            .attr('x', 666 - 65)
-            .attr('y', 25)
-            .attr('height', 100)
-            .attr('width', 100);
 
         this.svg.append("g")
             .attr("transform", "translate(0," + (this._height + 10) + ")")
@@ -207,10 +199,16 @@ export class BarChart {
         x.domain(stackedData.data.xRange);
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
+        const legend = this.svg.selectAll('g').data(stackedData, d => d);
+
         // Adds the legend
-        this.legend.selectAll('g').data(stackedData)
-            .enter()
+        const legendEnter = legend.enter()
             .append('g')
+            .attr('class', 'legend')
+            .attr('x', 666 - 65)
+            .attr('y', 25)
+            .attr('height', 100)
+            .attr('width', 100)
             .each(function(d, i) {
                 let g = d3.select(this);
 
@@ -230,6 +228,10 @@ export class BarChart {
                     .text(chartOptions[d.key].name)
                         .attr('font-size', '16pt');
             });
+
+        legend.exit()
+            .attr('class', 'exit')
+            .remove();
 
         const categories = this.svg.selectAll('.category')
             .data(stackedData)

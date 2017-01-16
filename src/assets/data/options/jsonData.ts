@@ -3,43 +3,43 @@ export const jsonData = {
         key: 'studytime',
         name: 'Weekly Studytime',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     famrel: {
         key: 'famrel',
         name: 'Family Relationship Quality',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     freetime: {
         key: 'freetime',
         name: 'Amount of Freetime',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     goout: {
         key: 'goout',
         name: 'Going Out with Friends',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     dalc: {
         key: 'dalc',
         name: 'Workday Alcohol Consumption',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     walc: {
         key: 'walc',
         name: 'Weekend Alcohol Consumption',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     health: {
         key: 'health',
         name: 'Health Status',
         type: 'numeric',
-        options: undefined
+        options: [1, 2, 3, 4, 5]
     },
     school: {
         key: 'school',

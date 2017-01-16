@@ -227,3 +227,11 @@ small {
 .float-right {
     float: right;
 }
+
+.legend {
+    transition: opacity 300ms, transform 300ms;
+}
+
+.legend--move-out {
+    transform: translateX(50%);
+}
