@@ -35,10 +35,10 @@ export class BarChart {
             .classed('svg-container--barchart', true)
             .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1100 550')
+            .attr('viewBox', '0 0 1150 530')
             .classed('svg-content-responsive', true)
             .append('g')
-            .attr('style', 'transform: translateX(70px)');
+            .attr('style', 'transform: translate(70px, 10px)');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
