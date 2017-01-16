@@ -94,6 +94,7 @@ h3 {
     height: 17vw;
     margin-bottom: .7em;
     border-radius: 5px;
+    max-height: 250px;
 }
 
 .choice--default {
