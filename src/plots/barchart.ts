@@ -71,6 +71,13 @@ export class BarChart {
             for (let label in compareObj) {
                 const value = compareObj[label];
 
+                if (typeof options.compareWithOthers === 'string') {
+                    if (value.type !== options.compareWithOthers) {
+                        continue;
+                    }
+                }
+
+
                 selectOptions += `<option value="${ value.key }">${ value.name }</option>`;
             }
 
@@ -95,8 +102,8 @@ export class BarChart {
         }
     }
 
-    //////////////////
-    // == PUBLIC == //
+      //////////////////
+     // == PUBLIC == //
     //////////////////
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
         const chooser = stackedX.key;
