@@ -123,6 +123,7 @@ export class PieChart {
             .attrTween('d', arcTween)
 
         path.attr('class', 'update')
+            .attr('class', 'path')
             .attr('fill', d => chartOptions[d.data.label].color)
             .transition()
             .duration(750)
