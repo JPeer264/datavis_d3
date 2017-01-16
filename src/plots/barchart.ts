@@ -35,10 +35,10 @@ export class BarChart {
             .classed('svg-container--barchart', true)
             .append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 1150 530')
+            .attr('viewBox', '0 0 1250 530')
             .classed('svg-content-responsive', true)
             .append('g')
-            .attr('style', 'transform: translate(70px, 10px)');
+            .attr('style', 'transform: translate(100px, 10px)');
 
         this.x = d3.scaleBand()
             .range([0, this._width])
@@ -230,7 +230,15 @@ export class BarChart {
             .attr('class', `${ this.compareSelector }-x-axis`)
             .call(d3.axisLeft(y)
                 .ticks(5))
-            .attr('font-size', '18pt');
+            .attr('font-size', '18pt')
+            .append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 0 - 90)
+            .attr('x',0 - (this._height / 2))
+            .attr('dy', '1em')
+            .attr('fill', '#000')
+            .style('text-anchor', 'middle')
+            .text(this.options.stacked.label.name);
 
         this.svg.append('g')
             .attr('transform', `translate(0, ${ this._height + 10 })`)
@@ -238,7 +246,14 @@ export class BarChart {
             .attr('class', `${ this.compareSelector }-x-axis`)
             .call(d3.axisBottom(x)
                 .ticks(5))
-            .attr('font-size', '18pt');
+            .attr('font-size', '18pt')
+            .append('text')
+            .attr('y', 40)
+            .attr('x', this._width / 2)
+            .attr('dy', '1em')
+            .attr('fill', '#000')
+            .style('text-anchor', 'middle')
+            .text(this.options.stacked.x.name);
     }
 
     private addChart(data) {
