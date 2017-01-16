@@ -240,19 +240,32 @@ export class BarChart {
                         textValue = chartOptions[value].name;
                     }
 
-                    text += `${jsonData[key].name}: <b>${textValue}</b><br>`;
+                    text += `${jsonData[key].name}: <strong>${textValue}</strong><br>`;
                 }
 
                 self.tooltip.style('transform', `translate(${xPosition}px, ${yPosition}px)`);
                 self.tooltip.html(`<strong>${amount} People</strong><br>${text}`);
             })
             .on('click', function (d, i) {
+                console.log(d);
                 const $this = $(this);
-                const className = `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`;
+                const selectors = {
+                    thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
+                    // @mario change the information class
+                    // also variable name if needed
+                    moreInfo: '.more-info'
+                };
+
+                let isFirstLoop = true;
+                let moreInfoText = '';
 
                 if (self.options.interactive) {
                     if ($this.hasClass('rect-active')) {
-                        $(className).removeClass('low-alpha rect-active');
+                        $(selectors.thisClass).removeClass('low-alpha rect-active');
+
+                        // @mario deletes moreinfo text
+                        // animation needed!!!!!!
+                        $(selectors.moreInfo).html('');
 
                         manager.releaseFilter();
                         manager.updateCharts();
@@ -260,11 +273,33 @@ export class BarChart {
                         return;
                     }
 
+                    for (let label in d.data.filterData) {
+                        let value = d.data.filterData[label];
+                        let textValue = value;
+
+                        let prefix = ' & ';
+
+                        if (isFirstLoop) {
+                            prefix = '';
+
+                            isFirstLoop = false;
+                        }
+
+                        if (chartOptions[value] && chartOptions[value].name) {
+                            textValue = chartOptions[value].name;
+                        }
+
+                        moreInfoText += `${prefix}${jsonData[label].name}: <strong>${ textValue }</strong>`;
+                    }
+
                     manager.filterData(d.data.filterData);
                     manager.updateCharts();
 
-                    $(className).removeClass('low-alpha rect-active');
-                    $(className).addClass('low-alpha');
+                    // @mario adds moreinfo text
+                    // animation needed!!!!!!
+                    $(selectors.moreInfo).html(moreInfoText);
+                    $(selectors.thisClass).removeClass('low-alpha rect-active');
+                    $(selectors.thisClass).addClass('low-alpha');
                     $this.removeClass('low-alpha');
                     $this.addClass('rect-active');
                 }
