@@ -94,6 +94,9 @@ export class BarChart {
         }
     }
 
+      //////////////////
+     // == PUBLIC == //
+    //////////////////
     public prepareStackedData(stackedLabel, stackedX, data = this.options.data.data) {
         const chooser = stackedX.key;
         const seperator = stackedLabel.key;
@@ -180,12 +183,8 @@ export class BarChart {
     }
 
     public update(data = undefined): void {
-        const self        = this;
-        const manager     = this.options.manager;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
-        let width  = this._width;
-        let height = this._height;
         let x = this.x;
         let y = this.y;
 
@@ -193,47 +192,28 @@ export class BarChart {
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
 
-          // ============ //
-         // == LEGEND == //
-        // ============ //
-        const legend = this.svg.selectAll('g').data(stackedData, d => d);
+          // =============== //
+         // == FUNCTIONS == //
+        // =============== //
+        this.addLegend(stackedData);
+        this.addChart(stackedData);
+    }
 
-        const legendEnter = legend.enter()
-            .append('g')
-            .attr('class', 'legend')
-            .attr('x', 666 - 65)
-            .attr('y', 25)
-            .attr('height', 100)
-            .attr('width', 100)
-            .each(function(d, i) {
-                let g = d3.select(this);
+      ///////////////////
+     // == PRIVATE == //
+    ///////////////////
+    private addChart(data) {
+        const self        = this;
+        const manager     = this.options.manager;
 
-                g.append('rect')
-                    .attr('x', width + 20)
-                    .attr('y', (height/2 - 30) + i * 40)
-                    .attr('width', 24)
-                    .attr('height', 24)
-                    .style('fill', d => chartOptions[d.key].color);
-
-                g.append('text')
-                    .attr('x', width + 54)
-                    .attr('y', (height/2 - 10) + i * 40)
-                    .attr('height',30)
-                    .attr('width',100)
-                    .style('fill', '#333')
-                    .text(chartOptions[d.key].name)
-                        .attr('font-size', '16pt');
-            });
-
-        legend.exit()
-            .attr('class', 'exit')
-            .remove();
+        let x = this.x;
+        let y = this.y;
 
           // ====================== //
          // == CHART.CATEGORIES == //
         // ====================== //
         const categories = this.svg.selectAll('.category')
-            .data(stackedData)
+            .data(data)
 
         // Enter
         const categoriesEntered = categories.enter()
@@ -367,5 +347,43 @@ export class BarChart {
 
         // Remove
         rects.exit().remove();
+    }
+
+    private addLegend(data) {
+        let width  = this._width;
+        let height = this._height;
+
+        const legend = this.svg
+            .selectAll('.legend')
+            .data(data, d => d);
+
+        const legendEnter = legend.enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('x', 666 - 65)
+            .attr('y', 25)
+            .attr('height', 100)
+            .attr('width', 100)
+            .each(function(d, i) {
+                let g = d3.select(this);
+
+                g.append('rect')
+                    .attr('x', width + 20)
+                    .attr('y', (height/2 - 30) + i * 40)
+                    .attr('width', 24)
+                    .attr('height', 24)
+                    .style('fill', d => chartOptions[d.key].color);
+
+                g.append('text')
+                    .attr('x', width + 54)
+                    .attr('y', (height/2 - 10) + i * 40)
+                    .attr('height',30)
+                    .attr('width',100)
+                    .style('fill', '#333')
+                    .text(chartOptions[d.key].name)
+                        .attr('font-size', '16pt');
+            });
+
+        legend.exit().remove();
     }
 }
