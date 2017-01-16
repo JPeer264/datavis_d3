@@ -151,9 +151,6 @@ const showChoices = () => {
     });
 };
 
-  // ================ //
- // == INITIALIZE == //
-// ================ //
 loadOptions();
 setChoices();
 showChoices();
