@@ -20,7 +20,7 @@ export class BarChart {
         options.className = options.className || 'chart';
 
         if (options.interactive) {
-            this.addHeader("h1", getStackedNames(this.options.stacked));
+            this.addHeader("h2", getStackedNames(this.options.stacked));
         }
 
         this.svg = d3.select(options.selector)

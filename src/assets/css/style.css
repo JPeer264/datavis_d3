@@ -18,6 +18,10 @@
     left: 0;
 }
 
+.barchart h2 {
+    padding-bottom: 1em;
+}
+
 .tooltip {
     position: fixed;
     top: 0;
@@ -109,8 +113,14 @@ h3 {
     color: #5ebbd9;
 }
 
+.summary .summary-header {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 .main-chart-wrapper {
     background: rgba(255,255,255,.5);
+    padding-top: 2em;
 }
 
 .backBtn {
@@ -212,4 +222,8 @@ small {
 
 .selection {
     display: none;
+}
+
+.float-right {
+    float: right;
 }
