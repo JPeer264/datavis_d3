@@ -107,7 +107,7 @@ export class PieChart {
             })
             .on('mousemove', function (d) {
                 const xPosition = d3.mouse($('body')[0])[0] - 20 - ($('.tooltip').width() / 2);
-                const yPosition = d3.mouse($('body')[0])[1] - 40 - $(window).scrollTop() - ($('.tooltip').height() / 2);
+                const yPosition = d3.mouse($('body')[0])[1] - 50 - $(window).scrollTop() - ($('.tooltip').height() / 2);
 
                 let text = `${chartOptions[d.data.label].name}: <b>${d.data.count} People</b>`;
 
