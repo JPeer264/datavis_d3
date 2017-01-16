@@ -181,27 +181,23 @@ export class BarChart {
 
     public update(data = undefined): void {
         const self        = this;
-        const stack       = d3.stack();
         const manager     = this.options.manager;
-        const isTooltip   = false;
         const stackedData = this.prepareStackedData(this.options.stacked.label, this.options.stacked.x, data);
 
         let width  = this._width;
         let height = this._height;
         let x = this.x;
         let y = this.y;
-        // let tooltip = d3.select('body').append('div')
-        //     .attr('class', 'tooltip')
-        //     .style('opacity', 0);
 
-        // Scale the range of the data in the domains
-        // @todo get right z.domain
         x.domain(stackedData.data.xRange);
         y.domain([0, d3.max(stackedData[stackedData.length - 1], d => d[1])]);
 
+
+          // ============ //
+         // == LEGEND == //
+        // ============ //
         const legend = this.svg.selectAll('g').data(stackedData, d => d);
 
-        // Adds the legend
         const legendEnter = legend.enter()
             .append('g')
             .attr('class', 'legend')
@@ -233,21 +229,31 @@ export class BarChart {
             .attr('class', 'exit')
             .remove();
 
+          // ====================== //
+         // == CHART.CATEGORIES == //
+        // ====================== //
         const categories = this.svg.selectAll('.category')
             .data(stackedData)
 
+        // Enter
         const categoriesEntered = categories.enter()
             .append('g')
             .attr('class', 'category');
 
+        // Update
         const categoriesUpdated = categories.merge(categoriesEntered)
             .attr('fill', d => chartOptions[d.key].color);
 
+        // Remove
         categories.exit().remove();
 
+          // ================= //
+         // == CHART.RECTS == //
+        // ================= //
         const rects = categoriesUpdated.selectAll('rect')
             .data(d => d);
 
+        // Enter
         const rectsEntered = rects.enter()
             .append('rect')
             .attr('class', (d, i) => {
@@ -286,7 +292,6 @@ export class BarChart {
                 self.tooltip.html(`<strong>${amount} People</strong><br>${text}`);
             })
             .on('click', function (d, i) {
-                console.log(d);
                 const $this = $(this);
                 const selectors = {
                     thisClass: `.interactive-rect-${Object.keys(d.data.filterData).join('-')}`,
@@ -352,6 +357,7 @@ export class BarChart {
                 }
             });
 
+        // Update
         const rectsUpdated = rects.merge(rectsEntered)
             .attr('x', (d, i) => x(i + 1))
             .attr('width', x.bandwidth())
@@ -359,6 +365,7 @@ export class BarChart {
             .attr('y', d => y(d[1]))
             .attr('height', d => y(d[0]) - y(d[1]));
 
+        // Remove
         rects.exit().remove();
     }
 }
