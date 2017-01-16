@@ -69,7 +69,7 @@ export class BarChart {
                 }
 
                 // do not compare with the same
-                if (options.stacked.x.key === value.key) {
+                if (options.stacked.x.key === value.key || options.stacked.label.key === value.key) {
                     continue;
                 }
 
