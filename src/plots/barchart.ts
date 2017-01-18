@@ -176,8 +176,6 @@ export class BarChart {
                 counter += 1;
             }
 
-            // xRange = Object.keys(seperatedData[label]);
-
             result.push(appendArray);
 
             // append as required in D3.stack()
